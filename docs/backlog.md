@@ -137,9 +137,9 @@ Cada ítem fluye por el pipeline spec-kit, en orden, honrando cada gate:
 - **What:** No hay gate de calidad estático. Asegurar `tsc --noEmit` y `expo lint` limpios en cada cambio.
 - **Acceptance criteria:**
   - [ ] `npm run typecheck` y `npm run lint` pasan sin errores
-  - [ ] Documentados en `AGENTS.md` como gates de merge
+  - [x] Documentados en `AGENTS.md` como gates de merge
 - **Depends on:** —
-- **Status:** todo
+- **Status:** in-progress
 
 ### BL-011 · Tests unitarios para dominio, db y servicios · P1
 - **What:** No existen tests. Agregar cobertura unitaria para modelos, repositorios SQLite y servicios (planificador, ubicación).
@@ -172,10 +172,10 @@ Cada ítem fluye por el pipeline spec-kit, en orden, honrando cada gate:
 ### BL-014 · Revisión de privacidad: no persistir ubicación actual salvo acción explícita · P2
 - **What:** Verificar que las coordenadas de ubicación actual no se persistan salvo acción explícita del usuario (guardar lugar), según `docs/architecture.md`.
 - **Acceptance criteria:**
-  - [ ] Auditoría de código confirma que no se persiste ubicación actual automáticamente
-  - [ ] Documentado en `README.md`/docs
+  - [x] Auditoría de código confirma que no se persiste ubicación actual automáticamente
+  - [x] Documentado en `README.md`/docs
 - **Depends on:** —
-- **Status:** todo
+- **Status:** done
 
 ### BL-015 · Usuario anónimo y sincronización remota (fase posterior) · P2
 - **What:** Fase posterior: usuario anónimo y sincronización remota con conflicto resuelto por `updated_at`, sin login para el MVP.
