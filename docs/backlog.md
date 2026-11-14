@@ -31,13 +31,26 @@ Cada ítem fluye por el pipeline spec-kit, en orden, honrando cada gate:
 **Prioridades:** P0 = imprescindible para un MVP confiable · P1 = importante poco después · P2 = deseable
 **Valores de estado:** `todo` · `in-progress` · `done`
 
+## Hito principal
+
+Conseguir que un usuario pueda introducir dos direcciones de Montevideo y
+obtener alternativas reales de ómnibus, con sus paradas y transbordos. Para
+ello, la prioridad es implementar la integración real de transporte:
+1. Descargar el GTFS oficial de Montevideo.
+2. Analizar `routes.txt`, `trips.txt`, `stops.txt`, `stop_times.txt` y
+   `shapes.txt`.
+3. Configurar OpenTripPlanner.
+4. Implementar geocodificación de origen y destino.
+5. Calcular itinerarios reales.
+6. Dibujar recorridos y paradas sobre MapLibre.
+
 ## Corte MVP sugerido
 
 | Release | Alcance |
 | ------- | ------- |
-| vNext | Épicas 1–2 (BL-001 – BL-005, BL-006 – BL-008) — integración de datos oficial y planificación real |
-| Next | Épicas 3–4 (BL-009 – BL-013) — mapas de producción, calidad y CI |
-| Last | Épicas 5–6 (BL-014 – BL-015) — privacidad/sincronización y adopción del workflow |
+| vNext | Integración real de transporte (BL-001 – BL-008, BL-017) hasta alcanzar el hito principal |
+| Next | Calidad, CI y mapas de producción (BL-009 – BL-013) |
+| Last | Privacidad/sincronización, mantenimiento de la fuente y adopción (BL-014 – BL-016, BL-018) |
 
 ## Épica 1: Integración de datos (GTFS + OTP en backend)
 
@@ -80,7 +93,7 @@ Cada ítem fluye por el pipeline spec-kit, en orden, honrando cada gate:
 - **Depends on:** BL-003
 - **Status:** todo
 
-### BL-005 · Endpoint de planificación con itinerarios reales · P1
+### BL-005 · Endpoint de planificación con itinerarios reales · P0
 - **What:** Endurecer el endpoint `/v1/trips/plan`: validación de parámetros, timeouts, caché y límites de consulta.
 - **Acceptance criteria:**
   - [ ] Validación de entrada robusta (coordenadas, preferencias, hora de salida)
@@ -92,7 +105,7 @@ Cada ítem fluye por el pipeline spec-kit, en orden, honrando cada gate:
 
 ## Épica 2: Experiencia de planificación en móvil
 
-### BL-006 · Geocodificación real del destino (mediada por backend) · P1
+### BL-006 · Geocodificación real del destino (mediada por backend) · P0
 - **What:** El adaptador de geocodificación es solo un tipo; Nominatim público no debe invocarse desde el cliente en producción. Implementar geocodificación mediada por backend/proveedor con SLA.
 - **Acceptance criteria:**
   - [ ] Búsqueda de destino devuelve coordenadas reales
@@ -101,7 +114,7 @@ Cada ítem fluye por el pipeline spec-kit, en orden, honrando cada gate:
 - **Depends on:** BL-005
 - **Status:** todo
 
-### BL-007 · Aplicar preferencias del usuario al planificador · P1
+### BL-007 · Aplicar preferencias del usuario al planificador · P0
 - **What:** Las preferencias (evitar transbordos, caminar menos, accesibilidad) se guardan pero no se aplican al cálculo. Conectarlas al motor.
 - **Acceptance criteria:**
   - [ ] Las preferencias se envían al backend y afectan el resultado
@@ -110,7 +123,7 @@ Cada ítem fluye por el pipeline spec-kit, en orden, honrando cada gate:
 - **Depends on:** BL-005
 - **Status:** todo
 
-### BL-008 · Mostrar itinerarios, paradas y transbordos en resultados · P1
+### BL-008 · Mostrar itinerarios, paradas y transbordos en resultados · P0
 - **What:** La pantalla de resultados solo muestra un aviso. Presentar alternativas ordenadas por duración y transbordos, paradas de subida/bajada/intermedias, tiempo de caminata y ETA.
 - **Acceptance criteria:**
   - [ ] Lista de itinerarios con duración, caminata y transbordos
@@ -118,6 +131,16 @@ Cada ítem fluye por el pipeline spec-kit, en orden, honrando cada gate:
   - [ ] Estados de carga, vacío y error
   - [ ] Sin datos inventados si el servicio no está configurado
 - **Depends on:** BL-006, BL-007
+- **Status:** todo
+
+### BL-017 · Dibujar recorridos y paradas sobre MapLibre · P0
+- **What:** Mostrar sobre el mapa de resultados las rutas (shapes) y paradas de cada itinerario alternativo, con interacción para seleccionar una alternativa.
+- **Acceptance criteria:**
+  - [ ] Polilíneas de cada leg (shape) dibujadas sobre MapLibre
+  - [ ] Marcadores de paradas de subida/bajada e intermedias
+  - [ ] Selección de itinerario resalta su recorrido
+  - [ ] Sin geometrías inventadas si no hay datos oficiales
+- **Depends on:** BL-004, BL-008
 - **Status:** todo
 
 ## Épica 3: Mapas y tiles en producción
@@ -183,6 +206,18 @@ Cada ítem fluye por el pipeline spec-kit, en orden, honrando cada gate:
   - [ ] Diseño de sincronización documentado (conflicto por `updated_at`)
   - [ ] Implementación fuera del MVP (no bloquea vNext)
 - **Depends on:** —
+- **Status:** todo
+
+## Épica 7: Mantenimiento de la fuente de transporte
+
+### BL-018 · Revisión semanal de actualizaciones del GTFS de la IMM · P1
+- **What:** Establecer una revisión semanal de actualizaciones del GTFS publicado por la IMM para mantener actualizada la fuente de transporte (fechas, rutas, paradas).
+- **Acceptance criteria:**
+  - [ ] Rutina semanal documentada (manual o automatizada) para verificar nueva versión del GTFS
+  - [ ] Comparación de versión/fecha del feed y registro del resultado
+  - [ ] Procedimiento de revalidación y recarga en OTP documentado
+  - [ ] Alerta/notificación cuando haya un feed nuevo
+- **Depends on:** BL-003, BL-004
 - **Status:** todo
 
 ## Gobernanza
