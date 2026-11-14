@@ -1,0 +1,27 @@
+{
+  "expo": {
+    "name": "Ómnibus Tracker",
+    "slug": "omnibus-tracker",
+    "scheme": "omnibusmvd",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "plugins": [
+      "expo-router",
+      ["expo-location", { "locationWhenInUsePermission": "Permitir usar tu ubicación para calcular viajes." }],
+      "expo-sqlite",
+      "@maplibre/maplibre-react-native"
+    ],
+    "android": {
+      "package": "uy.omnibusmvd.app",
+      "permissions": [
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION"
+      ]
+    },
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
