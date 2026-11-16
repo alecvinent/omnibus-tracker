@@ -23,6 +23,8 @@ Todavía no incluye cálculo real de itinerarios ni feed GTFS integrado. La API 
 - JDK compatible con la versión de Android Gradle Plugin generada por Expo.
 - EAS CLI opcional para builds en la nube.
 
+Guía paso a paso (dev client, compilar en Windows, Metro, Orbit): [`docs/desarrollo-android-local.md`](docs/desarrollo-android-local.md).
+
 ## Instalación
 
 ```bash

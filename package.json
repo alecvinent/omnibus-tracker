@@ -9,6 +9,8 @@
     "prebuild": "expo prebuild",
     "typecheck": "tsc --noEmit",
     "lint": "expo lint",
+    "android:apk": "powershell -NoProfile -ExecutionPolicy Bypass -File ./scripts/android-local-build.ps1",
+    "eas:build:development": "eas build --platform android --profile development",
     "eas:build:preview": "eas build --platform android --profile preview",
     "eas:build:production": "eas build --platform android --profile production"
   },
@@ -16,6 +18,7 @@
     "@maplibre/maplibre-react-native": "^11.3.7",
     "@react-native-async-storage/async-storage": "^2.2.0",
     "expo": "~57.0.0",
+    "expo-dev-client": "~57.0.21",
     "expo-linking": "~57.0.0",
     "expo-location": "~57.0.0",
     "expo-router": "~57.0.0",
