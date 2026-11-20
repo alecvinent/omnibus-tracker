@@ -260,13 +260,13 @@ ello, la prioridad es implementar la integración real de transporte:
 ### BL-025 · Guardar historial de rutas frecuentes del usuario · P2
 - **What:** Permitir guardar las rutas que el usuario busca, mostrarlas como "frecuentes" o "recientes" y permitir reutilizarlas con un toque.
 - **Acceptance criteria:**
-  - [ ] Cada búsqueda de viaje exitosa se guarda en historial local (origen, destino, coordenadas, timestamp).
+  - [ ] Cada búsqueda de viaje exitosa con origen explícito se guarda en historial local (origen, destino, coordenadas, timestamp).
+  - [ ] Las búsquedas cuyo origen sea la ubicación GPS actual no se guardan para respetar la privacidad (BL-014/BL-026).
   - [ ] El usuario puede ver una lista de rutas frecuentes/recientes.
   - [ ] El usuario puede borrar el historial completo o ítems individuales.
-  - [ ] Se respeta la política de privacidad: no se persiste ubicación actual sin acción explícita (ver BL-014).
   - [ ] Opcional: limitar cantidad de entradas guardadas.
 - **Depends on:** BL-008
-- **Status:** todo
+- **Status:** in-progress
 
 ## Épica 6: Configuración y alcance geográfico
 

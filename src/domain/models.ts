@@ -38,3 +38,14 @@ export type PlannedItinerary = {
   transfers: number;
   legs: TransitLeg[];
 };
+
+export type TripHistoryItem = {
+  id: string;
+  originLabel: string;
+  originLatitude: number;
+  originLongitude: number;
+  destinationLabel: string;
+  destinationLatitude: number;
+  destinationLongitude: number;
+  createdAt: string;
+};

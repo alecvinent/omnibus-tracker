@@ -1,5 +1,9 @@
 import { getDatabase } from "./database";
-import { Place, UserPreferences } from "@/domain/models";
+import { Place, TripHistoryItem, UserPreferences } from "@/domain/models";
+
+function generateId(): string {
+  return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 9)}`;
+}
 
 export async function savePlace(place: Place) {
   const db = await getDatabase();
@@ -39,13 +43,72 @@ export async function savePreferences(p: UserPreferences) {
   const db = await getDatabase();
   await db.runAsync(
     `INSERT INTO preferences (id, avoid_transfers, minimize_walking, accessible_only, city_id)
-      VALUES (1, ?, ?, ?, ?)
-      ON CONFLICT(id) DO UPDATE SET avoid_transfers=excluded.avoid_transfers,
-        minimize_walking=excluded.minimize_walking, accessible_only=excluded.accessible_only,
-        city_id=excluded.city_id`,
+       VALUES (1, ?, ?, ?, ?)
+       ON CONFLICT(id) DO UPDATE SET avoid_transfers=excluded.avoid_transfers,
+         minimize_walking=excluded.minimize_walking, accessible_only=excluded.accessible_only,
+         city_id=excluded.city_id`,
     Number(p.avoidTransfers),
     Number(p.minimizeWalking),
     Number(p.accessibleOnly),
     p.cityId ?? null
   );
+}
+
+export async function saveTripHistoryItem(
+  item: Omit<TripHistoryItem, "id" | "createdAt">
+): Promise<TripHistoryItem> {
+  const db = await getDatabase();
+  const newItem: TripHistoryItem = {
+    ...item,
+    id: generateId(),
+    createdAt: new Date().toISOString(),
+  };
+  await db.runAsync(
+    `INSERT INTO trip_history
+       (id, origin_label, origin_latitude, origin_longitude, destination_label, destination_latitude, destination_longitude, created_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+    newItem.id,
+    newItem.originLabel,
+    newItem.originLatitude,
+    newItem.originLongitude,
+    newItem.destinationLabel,
+    newItem.destinationLatitude,
+    newItem.destinationLongitude,
+    newItem.createdAt
+  );
+  return newItem;
+}
+
+export async function listTripHistory(limit = 50): Promise<TripHistoryItem[]> {
+  const db = await getDatabase();
+  const rows = await db.getAllAsync<{
+    id: string;
+    origin_label: string;
+    origin_latitude: number;
+    origin_longitude: number;
+    destination_label: string;
+    destination_latitude: number;
+    destination_longitude: number;
+    created_at: string;
+  }>("SELECT * FROM trip_history ORDER BY created_at DESC LIMIT ?", limit);
+  return rows.map((row) => ({
+    id: row.id,
+    originLabel: row.origin_label,
+    originLatitude: row.origin_latitude,
+    originLongitude: row.origin_longitude,
+    destinationLabel: row.destination_label,
+    destinationLatitude: row.destination_latitude,
+    destinationLongitude: row.destination_longitude,
+    createdAt: row.created_at,
+  }));
+}
+
+export async function deleteTripHistoryItem(id: string): Promise<void> {
+  const db = await getDatabase();
+  await db.runAsync("DELETE FROM trip_history WHERE id = ?", id);
+}
+
+export async function clearTripHistory(): Promise<void> {
+  const db = await getDatabase();
+  await db.runAsync("DELETE FROM trip_history");
 }

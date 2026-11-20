@@ -28,5 +28,17 @@ export async function initializeDatabase() {
     );
     INSERT OR IGNORE INTO preferences (id) VALUES (1);
     ALTER TABLE preferences ADD COLUMN city_id TEXT;
+
+    CREATE TABLE IF NOT EXISTS trip_history (
+      id TEXT PRIMARY KEY NOT NULL,
+      origin_label TEXT NOT NULL,
+      origin_latitude REAL NOT NULL,
+      origin_longitude REAL NOT NULL,
+      destination_label TEXT NOT NULL,
+      destination_latitude REAL NOT NULL,
+      destination_longitude REAL NOT NULL,
+      created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+    );
+    CREATE INDEX IF NOT EXISTS idx_trip_history_created_at ON trip_history(created_at DESC);
   `);
 }
