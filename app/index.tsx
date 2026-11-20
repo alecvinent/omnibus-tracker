@@ -41,15 +41,34 @@ export default function HomeScreen() {
 
   const [originQuery, setOriginQuery] = useState("Mi ubicación");
   const [destinationQuery, setDestinationQuery] = useState("");
-  const [originPlace, setOriginPlace] = useState<MapPlace | null>({
-    label: "Mi ubicación",
-    latitude: cityCenter[1],
-    longitude: cityCenter[0],
-  });
+  const [originPlace, setOriginPlace] = useState<MapPlace | null>(null);
   const [destinationPlace, setDestinationPlace] = useState<MapPlace | null>(null);
   const [activeField, setActiveField] = useState<ActiveField>(null);
   const [busy, setBusy] = useState(false);
   const [originManual, setOriginManual] = useState(false);
+
+  useEffect(() => {
+    if (originManual) return;
+    setBusy(true);
+    getCurrentLocation()
+      .then((coords) => {
+        setOriginQuery("Mi ubicación");
+        setOriginPlace({
+          label: "Mi ubicación",
+          latitude: coords.latitude,
+          longitude: coords.longitude,
+        });
+      })
+      .catch(() => {
+        // Fallback al centro de la ciudad configurada.
+        setOriginPlace({
+          label: "Mi ubicación",
+          latitude: cityCenter[1],
+          longitude: cityCenter[0],
+        });
+      })
+      .finally(() => setBusy(false));
+  }, [cityCenter, originManual]);
 
   const canSearch = useMemo(
     () => destinationQuery.trim().length > 2,
