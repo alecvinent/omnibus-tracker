@@ -49,9 +49,10 @@ class GeocodeResult(BaseModel):
 async def geocode_search(
     q: str = Query(..., min_length=2, max_length=120),
     limit: int = Query(6, ge=1, le=10),
+    cityId: str | None = Query(None, alias="cityId"),
 ):
     try:
-        rows = await search_places(q, limit=limit)
+        rows = await search_places(q, limit=limit, city_id=cityId)
     except httpx.HTTPError as exc:
         raise HTTPException(status_code=502, detail="El proveedor de geocodificación no respondió.") from exc
     return rows

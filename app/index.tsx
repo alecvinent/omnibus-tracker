@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Alert,
   Keyboard,
@@ -14,6 +14,9 @@ import { PlaceAutocompleteField } from "@/components/PlaceAutocompleteField";
 import { getCurrentLocation } from "@/services/location";
 import { geocodeFirst, type GeocodingResult } from "@/services/geocoding";
 import type { MapPlace } from "@/utils/mapGeometry";
+import { getCityCenter } from "@/utils/mapGeometry";
+import { getPreferences } from "@/db/repositories";
+import type { UserPreferences } from "@/domain/models";
 
 type ActiveField = "origin" | "destination" | null;
 
@@ -27,12 +30,21 @@ function toMapPlace(result: GeocodingResult): MapPlace {
 
 export default function HomeScreen() {
   const router = useRouter();
+  const [cityId, setCityId] = useState<string | undefined>(undefined);
+  const cityCenter = useMemo(() => getCityCenter(cityId), [cityId]);
+
+  useEffect(() => {
+    getPreferences()
+      .then((p: UserPreferences) => setCityId(p.cityId))
+      .catch(console.warn);
+  }, []);
+
   const [originQuery, setOriginQuery] = useState("Mi ubicación");
   const [destinationQuery, setDestinationQuery] = useState("");
   const [originPlace, setOriginPlace] = useState<MapPlace | null>({
     label: "Mi ubicación",
-    latitude: -34.9011,
-    longitude: -56.1645,
+    latitude: cityCenter[1],
+    longitude: cityCenter[0],
   });
   const [destinationPlace, setDestinationPlace] = useState<MapPlace | null>(null);
   const [activeField, setActiveField] = useState<ActiveField>(null);
@@ -68,7 +80,7 @@ export default function HomeScreen() {
     let dest = destinationPlace;
     if (!dest || dest.label !== destinationQuery.trim()) {
       try {
-        const resolved = await geocodeFirst(destinationQuery.trim());
+        const resolved = await geocodeFirst(destinationQuery.trim(), cityId);
         if (!resolved) {
           Alert.alert("Destino", "No encontramos ese lugar en Montevideo. Elegí una sugerencia de la lista.");
           return;
@@ -122,6 +134,7 @@ export default function HomeScreen() {
               label="ORIGEN"
               defaultValue={originQuery}
               placeholder="Dirección o lugar de salida"
+              cityId={cityId}
               active={activeField === "origin"}
               onFocus={() => {
                 setActiveField("origin");
@@ -152,6 +165,7 @@ export default function HomeScreen() {
               label="DESTINO"
               defaultValue={destinationQuery}
               placeholder="Dirección, lugar o parada"
+              cityId={cityId}
               active={activeField === "destination"}
               onFocus={() => setActiveField("destination")}
               onBlur={() => setTimeout(() => setActiveField((f) => (f === "destination" ? null : f)), 180)}
@@ -183,7 +197,7 @@ export default function HomeScreen() {
         </Text>
       </View>
       <View style={styles.mapContainer}>
-        <MapView origin={originPlace} destination={destinationPlace} />
+        <MapView origin={originPlace} destination={destinationPlace} center={cityCenter} />
       </View>
 
       <View style={styles.bottomRow}>

@@ -23,8 +23,10 @@ export async function initializeDatabase() {
       id INTEGER PRIMARY KEY CHECK (id = 1),
       avoid_transfers INTEGER NOT NULL DEFAULT 0,
       minimize_walking INTEGER NOT NULL DEFAULT 1,
-      accessible_only INTEGER NOT NULL DEFAULT 0
+      accessible_only INTEGER NOT NULL DEFAULT 0,
+      city_id TEXT
     );
     INSERT OR IGNORE INTO preferences (id) VALUES (1);
+    ALTER TABLE preferences ADD COLUMN city_id TEXT;
   `);
 }

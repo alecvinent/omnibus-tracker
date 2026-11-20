@@ -1,8 +1,13 @@
 import type { Coordinate } from "@/domain/models";
+import { getCityById } from "@/config/cities";
 
 export type MapPlace = Coordinate & { label?: string };
 
 export const MONTEVIDEO_CENTER: [number, number] = [-56.1645, -34.9011];
+
+export function getCityCenter(cityId?: string | null): [number, number] {
+  return getCityById(cityId).center;
+}
 
 export function toLngLat(point: Coordinate): [number, number] {
   return [point.longitude, point.latitude];
