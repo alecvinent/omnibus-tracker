@@ -10,6 +10,8 @@ export type UserPreferences = {
   avoidTransfers: boolean;
   minimizeWalking: boolean;
   accessibleOnly: boolean;
+  /** ID de la ciudad seleccionada (ver src/config/cities.ts). */
+  cityId?: string;
 };
 
 export type TransitStop = {

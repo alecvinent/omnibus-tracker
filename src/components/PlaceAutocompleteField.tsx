@@ -21,6 +21,8 @@ type Props = {
   onBlur?: () => void;
   /** Initial value (uncontrolled) */
   defaultValue?: string;
+  /** Ciudad usada para restringir la geocodificación. */
+  cityId?: string;
 };
 
 export const PlaceAutocompleteField = forwardRef<TextInput, Props>(
@@ -35,6 +37,7 @@ export const PlaceAutocompleteField = forwardRef<TextInput, Props>(
       onFocus,
       onBlur,
       defaultValue = "",
+      cityId,
     },
     ref,
   ) {
@@ -72,7 +75,7 @@ export const PlaceAutocompleteField = forwardRef<TextInput, Props>(
           setLoading(true);
           setError(null);
           try {
-            const results = await searchPlaces(q);
+            const results = await searchPlaces(q, { cityId });
             setSuggestions(results);
             if (results.length === 0) setError("Sin resultados en Montevideo");
           } catch {
@@ -83,7 +86,7 @@ export const PlaceAutocompleteField = forwardRef<TextInput, Props>(
           }
         }, 320);
       },
-      [active, editable, onChangeText],
+      [active, editable, cityId, onChangeText],
     );
 
     useEffect(() => {

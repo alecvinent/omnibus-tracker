@@ -6,21 +6,41 @@ import httpx
 
 NOMINATIM_URL = "https://nominatim.openstreetmap.org/search"
 USER_AGENT = "OmnibusTracker/0.1 (transit planner; backend geocode)"
-# Viewbox Montevideo: lon/lat esquinas SW y NE
-MONTEVIDEO_VIEWBOX = "-56.45,-34.95,-55.95,-34.75"
+
+# Configuración por ciudad soportada. viewbox: lon/lat esquinas SW y NE.
+CITIES: dict[str, dict[str, str]] = {
+    "montevideo-uy": {
+        "name": "la ciudad por defecto",
+        "countrycodes": "uy",
+        "viewbox": "-56.45,-34.95,-55.95,-34.75",
+    },
+}
+
+DEFAULT_CITY_ID = "montevideo-uy"
 
 
-async def search_places(query: str, *, limit: int = 6) -> list[dict[str, object]]:
+def get_city_config(city_id: str | None) -> dict[str, str]:
+    return CITIES.get(city_id or DEFAULT_CITY_ID, CITIES[DEFAULT_CITY_ID])
+
+
+async def search_places(
+    query: str,
+    *,
+    limit: int = 6,
+    city_id: str | None = None,
+) -> list[dict[str, object]]:
     q = query.strip()
     if len(q) < 2:
         return []
+
+    city = get_city_config(city_id)
 
     params = {
         "q": q,
         "format": "json",
         "limit": min(limit, 10),
-        "countrycodes": "uy",
-        "viewbox": MONTEVIDEO_VIEWBOX,
+        "countrycodes": city["countrycodes"],
+        "viewbox": city["viewbox"],
         "bounded": "1",
         "addressdetails": "0",
     }

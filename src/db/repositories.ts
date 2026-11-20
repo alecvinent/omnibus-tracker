@@ -22,22 +22,30 @@ export async function listPlaces(): Promise<Place[]> {
 export async function getPreferences(): Promise<UserPreferences> {
   const db = await getDatabase();
   const row = await db.getFirstAsync<{
-    avoid_transfers: number; minimize_walking: number; accessible_only: number;
-  }>("SELECT avoid_transfers, minimize_walking, accessible_only FROM preferences WHERE id=1");
+    avoid_transfers: number;
+    minimize_walking: number;
+    accessible_only: number;
+    city_id: string | null;
+  }>("SELECT avoid_transfers, minimize_walking, accessible_only, city_id FROM preferences WHERE id=1");
   return {
     avoidTransfers: Boolean(row?.avoid_transfers),
     minimizeWalking: row ? Boolean(row.minimize_walking) : true,
     accessibleOnly: Boolean(row?.accessible_only),
+    cityId: row?.city_id ?? undefined,
   };
 }
 
 export async function savePreferences(p: UserPreferences) {
   const db = await getDatabase();
   await db.runAsync(
-    `INSERT INTO preferences (id, avoid_transfers, minimize_walking, accessible_only)
-     VALUES (1, ?, ?, ?)
-     ON CONFLICT(id) DO UPDATE SET avoid_transfers=excluded.avoid_transfers,
-       minimize_walking=excluded.minimize_walking, accessible_only=excluded.accessible_only`,
-    Number(p.avoidTransfers), Number(p.minimizeWalking), Number(p.accessibleOnly)
+    `INSERT INTO preferences (id, avoid_transfers, minimize_walking, accessible_only, city_id)
+      VALUES (1, ?, ?, ?, ?)
+      ON CONFLICT(id) DO UPDATE SET avoid_transfers=excluded.avoid_transfers,
+        minimize_walking=excluded.minimize_walking, accessible_only=excluded.accessible_only,
+        city_id=excluded.city_id`,
+    Number(p.avoidTransfers),
+    Number(p.minimizeWalking),
+    Number(p.accessibleOnly),
+    p.cityId ?? null
   );
 }

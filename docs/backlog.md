@@ -243,12 +243,12 @@ ello, la prioridad es implementar la integración real de transporte:
 ### BL-022 · Configuración de ciudad/país por defecto · P1
 - **What:** Como parte de la configuración de la app, mostrar el listado de ciudad/país disponibles. Por defecto "la ciudad por defecto". Las búsquedas de direcciones, geocodificación y mapa deben respetar la configuración seleccionada.
 - **Acceptance criteria:**
-  - [ ] Pantalla de preferencias permite seleccionar ciudad/país de una lista configurable.
-  - [ ] Valor por defecto: "la ciudad por defecto".
-  - [ ] La geocodificación y el centro del mapa usan la ciudad seleccionada.
-  - [ ] Si no hay ciudad configurada, se usa Montevideo sin fallar.
+  - [x] Pantalla de preferencias permite seleccionar ciudad/país de una lista configurable.
+  - [x] Valor por defecto: "la ciudad por defecto".
+  - [x] La geocodificación y el centro del mapa usan la ciudad seleccionada.
+  - [x] Si no hay ciudad configurada, se usa Montevideo sin fallar.
 - **Depends on:** BL-006
-- **Status:** todo
+- **Status:** in-progress
 
 ## Épica 7: Mantenimiento de la fuente de transporte
 
