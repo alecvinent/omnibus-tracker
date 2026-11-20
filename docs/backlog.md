@@ -147,12 +147,12 @@ ello, la prioridad es implementar la integración real de transporte:
 ### BL-026 · Usar ubicación GPS como origen por defecto · P0
 - **What:** Al abrir la app, el origen debe resolverse automáticamente con la ubicación GPS del usuario en lugar de usar un punto fijo de la ciudad seleccionada. Si no hay permiso o GPS disponible, se usa el centro de la ciudad configurada como fallback.
 - **Acceptance criteria:**
-  - [ ] Al iniciar la app se solicita/obtiene permiso de ubicación y se usa la posición actual como origen.
-  - [ ] Si el usuario rechaza el permiso o el GPS falla, el origen por defecto es el centro de la ciudad configurada.
-  - [ ] El usuario puede seguir usando el botón GPS para actualizar manualmente.
-  - [ ] No se persiste la ubicación actual sin acción explícita del usuario (ver BL-014).
+  - [x] Al iniciar la app se solicita/obtiene permiso de ubicación y se usa la posición actual como origen.
+  - [x] Si el usuario rechaza el permiso o el GPS falla, el origen por defecto es el centro de la ciudad configurada.
+  - [x] El usuario puede seguir usando el botón GPS para actualizar manualmente.
+  - [x] No se persiste la ubicación actual sin acción explícita del usuario (ver BL-014).
 - **Depends on:** BL-006, BL-022
-- **Status:** todo
+- **Status:** done
 
 ### BL-017 · Dibujar recorridos y paradas sobre MapLibre · P0
 - **What:** Mostrar sobre el mapa de resultados las rutas (shapes) y paradas de cada itinerario alternativo, con interacción para seleccionar una alternativa.
@@ -228,6 +228,15 @@ ello, la prioridad es implementar la integración real de transporte:
   - [ ] Backend: install deps + tests (pytest cuando existan)
   - [ ] Checks rojo/verde visibles antes del merge
 - **Depends on:** BL-010, BL-011
+- **Status:** todo
+
+### BL-027 · Evaluar opciones de hosting/distribución de la app · P1
+- **What:** Documentar alternativas para hostear/distribuir la app Android/iOS y recomendar la mejor opción según el stack (Expo/React Native) y presupuesto.
+- **Acceptance criteria:**
+  - [ ] Comparativa de opciones: Google Play Store, Apple App Store, Expo Application Services (EAS), Firebase App Distribution, TestFlight, Microsoft App Center, APK directo, FDroid.
+  - [ ] Recomendación principal justificada (costo, facilidad, OTA updates, CI/CD).
+  - [ ] Pasos de alto nivel para la opción recomendada documentados en `docs/deployment.md`.
+- **Depends on:** —
 - **Status:** todo
 
 ## Épica 5: Privacidad y sincronización
