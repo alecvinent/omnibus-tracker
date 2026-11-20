@@ -5,7 +5,7 @@ FastAPI inicial. Mantener aquí las credenciales privadas de la API de la IMM; n
 ## Endpoints actuales
 
 - `GET /health`
-- `GET /v1/geocode/search?q=...&limit=6` — búsqueda de lugares en Montevideo (Nominatim mediado por servidor)
+- `GET /v1/geocode/search?q=...&limit=6&cityId=...` — búsqueda de lugares en la ciudad configurada (Nominatim mediado por servidor)
 
 ```powershell
 cd backend

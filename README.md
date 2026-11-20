@@ -1,13 +1,13 @@
 # Ómnibus Tracker
 
-MVP Android para planificar viajes en ómnibus en Montevideo.
+MVP Android para planificar viajes en transporte público. Por defecto se configura con la ciudad por defecto, pero la arquitectura soporta múltiples ciudades.
 
 ## Estado de esta entrega
 
 Incluye:
 - Expo + React Native + TypeScript + Expo Router.
 - Integración nativa de MapLibre (requiere development build; no funciona en Expo Go).
-- Mapa centrado inicialmente en Montevideo.
+- Mapa centrado inicialmente en la ciudad configurada (la ciudad por defecto).
 - Búsqueda de origen/destino como primera interfaz.
 - Solicitud de ubicación del dispositivo.
 - Persistencia SQLite para lugares y preferencias.

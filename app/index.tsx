@@ -101,7 +101,7 @@ export default function HomeScreen() {
       try {
         const resolved = await geocodeFirst(destinationQuery.trim(), cityId);
         if (!resolved) {
-          Alert.alert("Destino", "No encontramos ese lugar en Montevideo. Elegí una sugerencia de la lista.");
+          Alert.alert("Destino", "No encontramos ese lugar en tu ciudad. Elegí una sugerencia de la lista.");
           return;
         }
         dest = toMapPlace(resolved);
@@ -138,7 +138,7 @@ export default function HomeScreen() {
         <View>
           <Text style={styles.eyebrow}>TRANSPORTE PÚBLICO</Text>
           <Text style={styles.title}>¿A dónde vamos?</Text>
-          <Text style={styles.subtitle}>Planificá tu viaje en Montevideo</Text>
+          <Text style={styles.subtitle}>Planificá tu viaje</Text>
         </View>
         <Pressable style={styles.profileButton} onPress={() => router.push("/preferences")}>
           <Text style={styles.profileIcon}>☷</Text>
