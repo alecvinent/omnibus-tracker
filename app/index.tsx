@@ -1,27 +1,60 @@
 import { useMemo, useState } from "react";
 import {
-  Alert, Keyboard, Pressable, StyleSheet, Text, TextInput, View,
+  Alert,
+  Keyboard,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
 } from "react-native";
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { MapView } from "@/components/MapView";
+import { PlaceAutocompleteField } from "@/components/PlaceAutocompleteField";
 import { getCurrentLocation } from "@/services/location";
+import { geocodeFirst, type GeocodingResult } from "@/services/geocoding";
+import type { MapPlace } from "@/utils/mapGeometry";
+
+type ActiveField = "origin" | "destination" | null;
+
+function toMapPlace(result: GeocodingResult): MapPlace {
+  return {
+    label: result.displayName,
+    latitude: result.latitude,
+    longitude: result.longitude,
+  };
+}
 
 export default function HomeScreen() {
   const router = useRouter();
-  const [origin, setOrigin] = useState("Mi ubicación");
-  const [destination, setDestination] = useState("");
-  const [originCoords, setOriginCoords] = useState<[number, number]>([-56.1645, -34.9011]);
+  const [originQuery, setOriginQuery] = useState("Mi ubicación");
+  const [destinationQuery, setDestinationQuery] = useState("");
+  const [originPlace, setOriginPlace] = useState<MapPlace | null>({
+    label: "Mi ubicación",
+    latitude: -34.9011,
+    longitude: -56.1645,
+  });
+  const [destinationPlace, setDestinationPlace] = useState<MapPlace | null>(null);
+  const [activeField, setActiveField] = useState<ActiveField>(null);
   const [busy, setBusy] = useState(false);
+  const [originManual, setOriginManual] = useState(false);
 
-  const canSearch = useMemo(() => destination.trim().length > 2, [destination]);
+  const canSearch = useMemo(
+    () => destinationQuery.trim().length > 2,
+    [destinationQuery],
+  );
 
   async function useMyLocation() {
     setBusy(true);
+    setOriginManual(false);
     try {
       const coords = await getCurrentLocation();
-      setOrigin("Mi ubicación");
-      setOriginCoords([coords.longitude, coords.latitude]);
+      setOriginQuery("Mi ubicación");
+      setOriginPlace({
+        label: "Mi ubicación",
+        latitude: coords.latitude,
+        longitude: coords.longitude,
+      });
     } catch (error) {
       Alert.alert("Ubicación no disponible", error instanceof Error ? error.message : "No se pudo obtener la ubicación.");
     } finally {
@@ -31,13 +64,39 @@ export default function HomeScreen() {
 
   async function searchTrip() {
     Keyboard.dismiss();
+    setActiveField(null);
+    let dest = destinationPlace;
+    if (!dest || dest.label !== destinationQuery.trim()) {
+      try {
+        const resolved = await geocodeFirst(destinationQuery.trim());
+        if (!resolved) {
+          Alert.alert("Destino", "No encontramos ese lugar en Montevideo. Elegí una sugerencia de la lista.");
+          return;
+        }
+        dest = toMapPlace(resolved);
+        setDestinationPlace(dest);
+        setDestinationQuery(resolved.displayName);
+      } catch {
+        Alert.alert("Destino", "No se pudo geocodificar. Verificá que el backend esté activo (EXPO_PUBLIC_API_URL).");
+        return;
+      }
+    }
+
+    const origin = originPlace;
+    if (!origin) {
+      Alert.alert("Origen", "Elegí un origen o usá GPS.");
+      return;
+    }
+
     router.push({
       pathname: "/results",
       params: {
-        origin,
-        destination: destination.trim(),
-        originLat: String(originCoords[1]),
-        originLon: String(originCoords[0]),
+        origin: origin.label ?? originQuery,
+        destination: dest.label ?? destinationQuery,
+        originLat: String(origin.latitude),
+        originLon: String(origin.longitude),
+        destLat: String(dest.latitude),
+        destLon: String(dest.longitude),
       },
     });
   }
@@ -59,8 +118,27 @@ export default function HomeScreen() {
         <View style={styles.fieldRow}>
           <View style={styles.dotOrigin} />
           <View style={styles.fieldContent}>
-            <Text style={styles.label}>ORIGEN</Text>
-            <Text style={styles.locationValue}>{origin}</Text>
+            <PlaceAutocompleteField
+              label="ORIGEN"
+              defaultValue={originQuery}
+              placeholder="Dirección o lugar de salida"
+              active={activeField === "origin"}
+              onFocus={() => {
+                setActiveField("origin");
+                if (!originManual && originQuery === "Mi ubicación") {
+                  setOriginManual(true);
+                  setOriginPlace(null);
+                }
+              }}
+              onBlur={() => setTimeout(() => setActiveField((f) => (f === "origin" ? null : f)), 180)}
+              onChangeText={setOriginQuery}
+              onSelectPlace={(place) => {
+                setOriginPlace(toMapPlace(place));
+                setOriginQuery(place.displayName);
+                setOriginManual(true);
+                setActiveField(null);
+              }}
+            />
           </View>
           <Pressable onPress={useMyLocation} disabled={busy}>
             <Text style={styles.action}>{busy ? "..." : "GPS"}</Text>
@@ -70,15 +148,22 @@ export default function HomeScreen() {
         <View style={styles.fieldRow}>
           <View style={styles.dotDestination} />
           <View style={styles.fieldContent}>
-            <Text style={styles.label}>DESTINO</Text>
-            <TextInput
-              value={destination}
-              onChangeText={setDestination}
+            <PlaceAutocompleteField
+              label="DESTINO"
+              defaultValue={destinationQuery}
               placeholder="Dirección, lugar o parada"
-              placeholderTextColor="#8A929B"
-              style={styles.input}
-              returnKeyType="search"
-              onSubmitEditing={searchTrip}
+              active={activeField === "destination"}
+              onFocus={() => setActiveField("destination")}
+              onBlur={() => setTimeout(() => setActiveField((f) => (f === "destination" ? null : f)), 180)}
+              onChangeText={(text) => {
+                setDestinationQuery(text);
+                setDestinationPlace(null);
+              }}
+              onSelectPlace={(place) => {
+                setDestinationPlace(toMapPlace(place));
+                setDestinationQuery(place.displayName);
+                setActiveField(null);
+              }}
             />
           </View>
         </View>
@@ -92,11 +177,13 @@ export default function HomeScreen() {
       </View>
 
       <View style={styles.mapHeader}>
-        <Text style={styles.sectionTitle}>Montevideo</Text>
-        <Text style={styles.mapHint}>Mapa de referencia</Text>
+        <Text style={styles.sectionTitle}>Mapa del viaje</Text>
+        <Text style={styles.mapHint}>
+          {destinationPlace ? "Origen y destino" : "Elegí lugares para ver la ruta"}
+        </Text>
       </View>
       <View style={styles.mapContainer}>
-        <MapView center={originCoords} />
+        <MapView origin={originPlace} destination={destinationPlace} />
       </View>
 
       <View style={styles.bottomRow}>
@@ -121,23 +208,20 @@ const styles = StyleSheet.create({
   subtitle: { color: "#697581", fontSize: 14, marginTop: 4 },
   profileButton: { width: 44, height: 44, borderRadius: 15, backgroundColor: "#E5F2EF", alignItems: "center", justifyContent: "center" },
   profileIcon: { fontSize: 25, color: "#167D72" },
-  searchCard: { backgroundColor: "#FFFFFF", borderRadius: 20, padding: 16, elevation: 2, shadowColor: "#17212B", shadowOpacity: 0.06, shadowRadius: 12 },
-  fieldRow: { flexDirection: "row", alignItems: "center", minHeight: 54, gap: 12 },
-  dotOrigin: { width: 11, height: 11, borderRadius: 6, backgroundColor: "#167D72" },
-  dotDestination: { width: 11, height: 11, borderRadius: 6, backgroundColor: "#E17A42" },
-  fieldContent: { flex: 1 },
-  label: { color: "#8A929B", fontSize: 9, fontWeight: "800", letterSpacing: 1 },
-  locationValue: { color: "#17212B", fontSize: 15, fontWeight: "600", marginTop: 4 },
-  input: { color: "#17212B", fontSize: 14, paddingVertical: 4, marginTop: 1 },
-  action: { color: "#167D72", fontWeight: "800", fontSize: 12, padding: 8 },
+  searchCard: { backgroundColor: "#FFFFFF", borderRadius: 20, padding: 16, elevation: 2, shadowColor: "#17212B", shadowOpacity: 0.06, shadowRadius: 12, zIndex: 2 },
+  fieldRow: { flexDirection: "row", alignItems: "flex-start", minHeight: 54, gap: 12 },
+  dotOrigin: { width: 11, height: 11, borderRadius: 6, backgroundColor: "#167D72", marginTop: 22 },
+  dotDestination: { width: 11, height: 11, borderRadius: 6, backgroundColor: "#E17A42", marginTop: 22 },
+  fieldContent: { flex: 1, overflow: "visible" },
+  action: { color: "#167D72", fontWeight: "800", fontSize: 12, padding: 8, marginTop: 14 },
   separator: { height: 1, backgroundColor: "#EDF0F2", marginLeft: 23 },
   searchButton: { backgroundColor: "#167D72", borderRadius: 13, paddingVertical: 15, alignItems: "center", marginTop: 12 },
   disabledButton: { opacity: 0.45 },
   searchButtonText: { color: "#FFFFFF", fontSize: 15, fontWeight: "800" },
   mapHeader: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginTop: 22, marginBottom: 10 },
   sectionTitle: { color: "#17212B", fontSize: 17, fontWeight: "800" },
-  mapHint: { color: "#8A929B", fontSize: 11 },
-  mapContainer: { flex: 1, minHeight: 190, overflow: "hidden", borderRadius: 18, backgroundColor: "#E4EAE8" },
+  mapHint: { color: "#8A929B", fontSize: 11, flexShrink: 1, textAlign: "right", marginLeft: 8 },
+  mapContainer: { flex: 1, minHeight: 190, zIndex: 0 },
   bottomRow: { flexDirection: "row", justifyContent: "space-around", paddingVertical: 14 },
   bottomItem: { alignItems: "center", gap: 3 },
   bottomIcon: { color: "#167D72", fontSize: 22 },

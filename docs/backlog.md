@@ -108,11 +108,22 @@ ello, la prioridad es implementar la integración real de transporte:
 ### BL-006 · Geocodificación real del destino (mediada por backend) · P0
 - **What:** El adaptador de geocodificación es solo un tipo; Nominatim público no debe invocarse desde el cliente en producción. Implementar geocodificación mediada por backend/proveedor con SLA.
 - **Acceptance criteria:**
-  - [ ] Búsqueda de destino devuelve coordenadas reales
-  - [ ] Geocodificación pasa por backend o proveedor con SLA (no Nominatim directo desde el cliente)
-  - [ ] Manejo de errores y estados vacíos en la UI
+  - [x] Búsqueda de destino devuelve coordenadas reales (autocomplete origen/destino en home vía `GET /v1/geocode/search`)
+  - [x] Geocodificación pasa por backend (Nominatim mediado; sin llamadas directas desde el cliente)
+  - [x] Manejo de errores y estados vacíos en la UI (sugerencias, “sin resultados”, backend caído)
+  - [ ] Proveedor/SLA de producción y límites documentados (sustituir Nominatim público en prod)
 - **Depends on:** BL-005
-- **Status:** todo
+- **Status:** in-progress
+
+### BL-019 · Mapa interactivo en planificación (autocomplete + ruta preview) · P0
+- **What:** Al escribir origen y destino, mostrar sugerencias de lugares y previsualizar en MapLibre marcadores y línea entre ambos puntos (sin geometría OTP inventada).
+- **Acceptance criteria:**
+  - [x] Autocomplete debounced en origen y destino mientras se escribe
+  - [x] MapLibre nativo con marcadores origen/destino y ajuste de cámara
+  - [x] Línea de vista previa entre origen y destino geocodificados
+  - [x] Misma vista de mapa en pantalla de resultados con coordenadas recibidas
+- **Depends on:** BL-006 (parcial)
+- **Status:** done
 
 ### BL-007 · Aplicar preferencias del usuario al planificador · P0
 - **What:** Las preferencias (evitar transbordos, caminar menos, accesibilidad) se guardan pero no se aplican al cálculo. Conectarlas al motor.
