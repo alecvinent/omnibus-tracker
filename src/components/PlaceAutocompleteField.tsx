@@ -77,7 +77,7 @@ export const PlaceAutocompleteField = forwardRef<TextInput, Props>(
           try {
             const results = await searchPlaces(q, { cityId });
             setSuggestions(results);
-            if (results.length === 0) setError("Sin resultados en Montevideo");
+            if (results.length === 0) setError("Sin resultados en tu ciudad");
           } catch {
             setSuggestions([]);
             setError("Backend no disponible");

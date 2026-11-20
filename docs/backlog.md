@@ -1,6 +1,6 @@
 # Backlog de producto — Ómnibus Tracker
 
-Backlog del MVP Android para planificar viajes en ómnibus en Montevideo,
+Backlog del MVP Android para planificar viajes en transporte público. El corte inicial se enfoca en la ciudad por defecto, pero la app está diseñada para soportar múltiples ciudades.
 derivado de `README.md`, `docs/architecture.md`, `docs/data-sources.md`,
 `backend/README.md` y los huecos detectados en el código el 2026-11-14.
 
@@ -33,7 +33,7 @@ Cada ítem fluye por el pipeline spec-kit, en orden, honrando cada gate:
 
 ## Hito principal
 
-Conseguir que un usuario pueda introducir dos direcciones de Montevideo y
+Conseguir que un usuario pueda introducir dos direcciones de su ciudad y
 obtener alternativas reales de ómnibus, con sus paradas y transbordos. Para
 ello, la prioridad es implementar la integración real de transporte:
 1. Descargar el GTFS oficial de Montevideo.
