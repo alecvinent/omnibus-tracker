@@ -1,14 +1,34 @@
+import { useMemo } from "react";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { MapView } from "@/components/MapView";
+import type { MapPlace } from "@/utils/mapGeometry";
 
 export default function ResultsScreen() {
   const router = useRouter();
-  const { origin, destination, originLat, originLon } = useLocalSearchParams<{
-    origin: string; destination: string; originLat: string; originLon: string;
+  const { origin, destination, originLat, originLon, destLat, destLon } = useLocalSearchParams<{
+    origin: string;
+    destination: string;
+    originLat: string;
+    originLon: string;
+    destLat: string;
+    destLon: string;
   }>();
-  const center: [number, number] = [Number(originLon) || -56.1645, Number(originLat) || -34.9011];
+
+  const originPlace = useMemo<MapPlace | null>(() => {
+    const lat = Number(originLat);
+    const lon = Number(originLon);
+    if (!Number.isFinite(lat) || !Number.isFinite(lon)) return null;
+    return { label: origin, latitude: lat, longitude: lon };
+  }, [origin, originLat, originLon]);
+
+  const destinationPlace = useMemo<MapPlace | null>(() => {
+    const lat = Number(destLat);
+    const lon = Number(destLon);
+    if (!Number.isFinite(lat) || !Number.isFinite(lon)) return null;
+    return { label: destination, latitude: lat, longitude: lon };
+  }, [destination, destLat, destLon]);
 
   return (
     <SafeAreaView style={styles.safe}>
@@ -25,14 +45,14 @@ export default function ResultsScreen() {
         <Text style={styles.routeValue}>{destination || "Destino"}</Text>
       </View>
       <View style={styles.map}>
-        <MapView center={center} />
+        <MapView origin={originPlace} destination={destinationPlace} />
       </View>
       <ScrollView contentContainerStyle={styles.content}>
         <Text style={styles.title}>Planificación de transporte</Text>
         <View style={styles.notice}>
-          <Text style={styles.noticeTitle}>Conectá los datos oficiales</Text>
+          <Text style={styles.noticeTitle}>Ruta en mapa (vista previa)</Text>
           <Text style={styles.noticeText}>
-            La interfaz está preparada, pero todavía no se muestran itinerarios: faltan la geocodificación real del destino, la importación y validación del GTFS oficial de Montevideo y la conexión del motor de rutas. No mostramos líneas ni paradas inventadas.
+            La línea conecta origen y destino geocodificados. Los recorridos reales de ómnibus se dibujarán cuando el GTFS y OpenTripPlanner estén conectados (BL-008 / BL-017).
           </Text>
         </View>
         <Text style={styles.caption}>Próxima integración</Text>

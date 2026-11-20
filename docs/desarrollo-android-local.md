@@ -65,7 +65,7 @@ EXPO_PUBLIC_MAP_STYLE_URL=https://demotiles.maplibre.org/style.json
 EXPO_PUBLIC_API_URL=http://192.168.1.9:8000
 ```
 
-Ajustá `192.168.1.9` a la IP Wi‑Fi de la PC (`ipconfig`). El backend FastAPI debe escuchar en `:8000` si querés probar planificación; la UI funciona sin backend.
+Ajustá `192.168.1.9` a la IP Wi‑Fi de la PC (`ipconfig`). El backend FastAPI en `:8000` es **necesario** para el autocomplete de lugares (`GET /v1/geocode/search`). Con USB podés usar `EXPO_PUBLIC_API_URL=http://localhost:8000` y `adb reverse tcp:8000 tcp:8000` en lugar de la IP LAN.
 
 Levantar Metro para dev client:
 
