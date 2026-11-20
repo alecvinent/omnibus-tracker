@@ -142,7 +142,7 @@ ello, la prioridad es implementar la integración real de transporte:
   - [ ] Estados de carga, vacío y error
   - [ ] Sin datos inventados si el servicio no está configurado
 - **Depends on:** BL-006, BL-007
-- **Status:** todo
+- **Status:** in-progress
 
 ### BL-026 · Usar ubicación GPS como origen por defecto · P0
 - **What:** Al abrir la app, el origen debe resolverse automáticamente con la ubicación GPS del usuario en lugar de usar un punto fijo de la ciudad seleccionada. Si no hay permiso o GPS disponible, se usa el centro de la ciudad configurada como fallback.
@@ -300,6 +300,15 @@ ello, la prioridad es implementar la integración real de transporte:
   - [x] `docs/backlog.md` existe con cabecera de workflow, prioridades, corte MVP y épicas sembradas
   - [x] `AGENTS.md` documenta el pipeline, el modelo de entrega y los gates de merge
   - [x] `CLAUDE.md` apunta al workflow de backlog sin alterar bloques existentes
+- **Depends on:** —
+- **Status:** done
+
+### BL-028 · Corregir dependencia de FastAPI para FastAPI Cloud · P0
+- **What:** El deploy en FastAPI Cloud falla con `RuntimeError: To use the fastapi command, please install "fastapi[standard]"`. El `requirements.txt` instala `fastapi` sin el extra `[standard]`, que incluye `fastapi-cli` y las dependencias mínimas que el comando `fastapi` necesita.
+- **Acceptance criteria:**
+  - [x] `backend/requirements.txt` usa `fastapi[standard]`
+  - [x] El deploy en FastAPI Cloud arranca sin el RuntimeError (verificar tras push)
+  - [x] README/backend documenta el requirement si aplica (usa `requirements.txt`; no requiere cambio)
 - **Depends on:** —
 - **Status:** done
 

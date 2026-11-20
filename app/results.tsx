@@ -1,9 +1,19 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { MapView } from "@/components/MapView";
+import { ItineraryCard } from "@/components/ItineraryCard";
+import { getPreferences } from "@/db/repositories";
+import { PlannedItinerary, UserPreferences } from "@/domain/models";
+import { planTrip } from "@/services/planner";
 import type { MapPlace } from "@/utils/mapGeometry";
+
+const defaultPreferences: UserPreferences = {
+  avoidTransfers: false,
+  minimizeWalking: true,
+  accessibleOnly: false,
+};
 
 export default function ResultsScreen() {
   const router = useRouter();
@@ -30,6 +40,44 @@ export default function ResultsScreen() {
     return { label: destination, latitude: lat, longitude: lon };
   }, [destination, destLat, destLon]);
 
+  const [itineraries, setItineraries] = useState<PlannedItinerary[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!originPlace || !destinationPlace) {
+      setError("Faltan coordenadas de origen o destino.");
+      return;
+    }
+
+    const originCoord = { latitude: originPlace.latitude, longitude: originPlace.longitude };
+    const destinationCoord = { latitude: destinationPlace.latitude, longitude: destinationPlace.longitude };
+
+    let cancelled = false;
+    setLoading(true);
+    setError(null);
+    setItineraries([]);
+
+    async function load() {
+      try {
+        const preferences = await getPreferences().catch(() => defaultPreferences);
+        const data = await planTrip({
+          origin: originCoord,
+          destination: destinationCoord,
+          preferences,
+        });
+        if (!cancelled) setItineraries(data);
+      } catch (err) {
+        if (!cancelled) setError(err instanceof Error ? err.message : "No se pudieron cargar los itinerarios.");
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+
+    load();
+    return () => { cancelled = true; };
+  }, [originPlace, destinationPlace]);
+
   return (
     <SafeAreaView style={styles.safe}>
       <View style={styles.top}>
@@ -48,17 +96,25 @@ export default function ResultsScreen() {
         <MapView origin={originPlace} destination={destinationPlace} />
       </View>
       <ScrollView contentContainerStyle={styles.content}>
-        <Text style={styles.title}>Planificación de transporte</Text>
-        <View style={styles.notice}>
-          <Text style={styles.noticeTitle}>Ruta en mapa (vista previa)</Text>
-          <Text style={styles.noticeText}>
-            La línea conecta origen y destino geocodificados. Los recorridos reales de ómnibus se dibujarán cuando el GTFS y OpenTripPlanner estén conectados (BL-008 / BL-017).
-          </Text>
-        </View>
-        <Text style={styles.caption}>Próxima integración</Text>
-        <Text style={styles.bullet}>• Alternativas ordenadas por duración y transbordos</Text>
-        <Text style={styles.bullet}>• Paradas de subida, bajada e intermedias</Text>
-        <Text style={styles.bullet}>• Tiempo de caminata y ETA cuando esté disponible</Text>
+        <Text style={styles.title}>Opciones de viaje</Text>
+        {loading && <ActivityIndicator color="#167D72" style={styles.loader} />}
+        {!loading && error && (
+          <View style={styles.notice}>
+            <Text style={styles.noticeTitle}>Planificación no disponible</Text>
+            <Text style={styles.noticeText}>{error}</Text>
+          </View>
+        )}
+        {!loading && !error && itineraries.length === 0 && (
+          <View style={styles.notice}>
+            <Text style={styles.noticeTitle}>Sin itinerarios</Text>
+            <Text style={styles.noticeText}>
+              No encontramos opciones de viaje para esta ruta. Cuando el motor de planificación esté conectado verás alternativas reales aquí.
+            </Text>
+          </View>
+        )}
+        {!loading && !error && itineraries.map((it) => (
+          <ItineraryCard key={it.id} itinerary={it} />
+        ))}
       </ScrollView>
     </SafeAreaView>
   );
@@ -73,12 +129,11 @@ const styles = StyleSheet.create({
   routeLabel: { color: "#8A929B", fontSize: 9, fontWeight: "800", letterSpacing: 1 },
   routeValue: { color: "#17212B", fontSize: 14, fontWeight: "700", marginTop: 3 },
   divider: { height: 1, backgroundColor: "#EDF0F2", marginVertical: 10 },
-  map: { height: 235, borderRadius: 16, overflow: "hidden" },
-  content: { paddingVertical: 18, gap: 10 },
+  map: { height: 235, borderRadius: 16, overflow: "hidden", marginBottom: 12 },
+  content: { paddingVertical: 8, gap: 10, paddingBottom: 24 },
   title: { color: "#17212B", fontSize: 19, fontWeight: "800" },
+  loader: { marginVertical: 20 },
   notice: { backgroundColor: "#FFF4E8", borderRadius: 14, padding: 15, gap: 7 },
   noticeTitle: { color: "#8A4A1B", fontSize: 14, fontWeight: "800" },
   noticeText: { color: "#765B46", fontSize: 12, lineHeight: 18 },
-  caption: { color: "#17212B", fontSize: 13, fontWeight: "800", marginTop: 4 },
-  bullet: { color: "#697581", fontSize: 12, lineHeight: 19 },
 });
