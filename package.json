@@ -7,6 +7,9 @@
     "url": "https://github.com/alecvinent/omnibus-tracker.git"
   },
   "main": "expo-router/entry",
+  "bin": {
+    "omnibus-backlog": "./scripts/backlog-cli.js"
+  },
   "scripts": {
     "start": "expo start --dev-client",
     "android": "expo run:android",
