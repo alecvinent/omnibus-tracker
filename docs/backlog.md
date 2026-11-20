@@ -165,6 +165,15 @@ ello, la prioridad es implementar la integración real de transporte:
 - **Depends on:** —
 - **Status:** todo
 
+### BL-023 · Mejorar calidad visual de los tiles del mapa · P1
+- **What:** El recurso de tiles actual (`demotiles.maplibre.org`) es de muy baja calidad. Reemplazarlo por un proveedor con resolución, contraste y cobertura adecuados para la navegación urbana en Montevideo.
+- **Acceptance criteria:**
+  - [ ] Los tiles muestran calles, nombres y puntos de referencia legibles al zoom de ruta.
+  - [ ] Se comparan al menos dos proveedores (gratuitos o propios) y se documenta la elección.
+  - [ ] La mejora se valida en dispositivo Android bajo luz solar y en interiores.
+- **Depends on:** BL-009
+- **Status:** todo
+
 ## Épica 4: Calidad y habilitadores de ingeniería
 
 ### BL-010 · Typecheck y lint como gate · P1
@@ -217,6 +226,18 @@ ello, la prioridad es implementar la integración real de transporte:
   - [ ] Diseño de sincronización documentado (conflicto por `updated_at`)
   - [ ] Implementación fuera del MVP (no bloquea vNext)
 - **Depends on:** —
+- **Status:** todo
+
+## Épica 6: Configuración y alcance geográfico
+
+### BL-022 · Configuración de ciudad/país por defecto · P1
+- **What:** Como parte de la configuración de la app, mostrar el listado de ciudad/país disponibles. Por defecto "la ciudad por defecto". Las búsquedas de direcciones, geocodificación y mapa deben respetar la configuración seleccionada.
+- **Acceptance criteria:**
+  - [ ] Pantalla de preferencias permite seleccionar ciudad/país de una lista configurable.
+  - [ ] Valor por defecto: "la ciudad por defecto".
+  - [ ] La geocodificación y el centro del mapa usan la ciudad seleccionada.
+  - [ ] Si no hay ciudad configurada, se usa Montevideo sin fallar.
+- **Depends on:** BL-006
 - **Status:** todo
 
 ## Épica 7: Mantenimiento de la fuente de transporte
