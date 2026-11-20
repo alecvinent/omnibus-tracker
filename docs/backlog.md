@@ -248,7 +248,7 @@ ello, la prioridad es implementar la integración real de transporte:
   - [x] La geocodificación y el centro del mapa usan la ciudad seleccionada.
   - [x] Si no hay ciudad configurada, se usa Montevideo sin fallar.
 - **Depends on:** BL-006
-- **Status:** in-progress
+- **Status:** done
 
 ## Épica 7: Mantenimiento de la fuente de transporte
 
