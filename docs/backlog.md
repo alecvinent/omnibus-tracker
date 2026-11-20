@@ -144,6 +144,16 @@ ello, la prioridad es implementar la integración real de transporte:
 - **Depends on:** BL-006, BL-007
 - **Status:** todo
 
+### BL-026 · Usar ubicación GPS como origen por defecto · P0
+- **What:** Al abrir la app, el origen debe resolverse automáticamente con la ubicación GPS del usuario en lugar de usar un punto fijo de la ciudad seleccionada. Si no hay permiso o GPS disponible, se usa el centro de la ciudad configurada como fallback.
+- **Acceptance criteria:**
+  - [ ] Al iniciar la app se solicita/obtiene permiso de ubicación y se usa la posición actual como origen.
+  - [ ] Si el usuario rechaza el permiso o el GPS falla, el origen por defecto es el centro de la ciudad configurada.
+  - [ ] El usuario puede seguir usando el botón GPS para actualizar manualmente.
+  - [ ] No se persiste la ubicación actual sin acción explícita del usuario (ver BL-014).
+- **Depends on:** BL-006, BL-022
+- **Status:** todo
+
 ### BL-017 · Dibujar recorridos y paradas sobre MapLibre · P0
 - **What:** Mostrar sobre el mapa de resultados las rutas (shapes) y paradas de cada itinerario alternativo, con interacción para seleccionar una alternativa.
 - **Acceptance criteria:**
