@@ -2,6 +2,10 @@
   "name": "omnibus-tracker",
   "version": "0.1.0",
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/badwarren/omnibus-tracker.git"
+  },
   "main": "expo-router/entry",
   "scripts": {
     "start": "expo start --dev-client",
@@ -12,7 +16,9 @@
     "android:apk": "powershell -NoProfile -ExecutionPolicy Bypass -File ./scripts/android-local-build.ps1",
     "eas:build:development": "eas build --platform android --profile development",
     "eas:build:preview": "eas build --platform android --profile preview",
-    "eas:build:production": "eas build --platform android --profile production"
+    "eas:build:production": "eas build --platform android --profile production",
+    "semantic-release": "semantic-release",
+    "semantic-release:dry": "semantic-release --dry-run --branches feature/021-semantic-release"
   },
   "dependencies": {
     "@maplibre/maplibre-react-native": "^11.3.7",
@@ -32,9 +38,15 @@
     "react-native-web": "^0.21.4"
   },
   "devDependencies": {
+    "@semantic-release/changelog": "^7.0.0",
+    "@semantic-release/commit-analyzer": "^13.0.1",
+    "@semantic-release/git": "^11.0.1",
+    "@semantic-release/github": "^12.0.11",
+    "@semantic-release/release-notes-generator": "^14.1.1",
     "@types/react": "~19.2.0",
     "eslint": "^9.0.0",
     "eslint-config-expo": "~10.0.0",
+    "semantic-release": "^25.0.9",
     "typescript": "~5.9.0"
   }
 }

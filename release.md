@@ -37,16 +37,40 @@ Este cambio es un **`fix`**, por lo tanto el siguiente release debe ser:
 fix(autocomplete): evitar pérdida de foco en campos origen/destino en Android
 ```
 
-## Consideraciones para semantic-release en este repositorio
+## Configuración de semantic-release
 
-1. **Rama de desarrollo:** `develop`.
-2. **Rama de release:** `main`.
-3. **Flujo de ramas:** cada cambio entra por `feature/NNN-<slug>` o `fix/NNN-<slug>` y se fusiona a `develop` mediante PR.
-4. **Tag inicial:** para que semantic-release comience a versionar desde `0.1.0`, el tag `v0.1.0` debe existir en el commit que publicó esa versión. Si no existe, semantic-release publicará `1.0.0` por defecto.
-5. **Para mantener 0.x:** si se desea que semantic-release no salte a `1.0.0` automáticamente, se puede:
-   - Publicar manualmente el tag `v0.1.0` en el commit base, o
-   - Configurar `.releaserc` con la rama `next` o pre-release, o
-   - Usar `@semantic-release/commit-analyzer` con `releaseRules` personalizadas.
+Se agregó `semantic-release` con los plugins:
+- `@semantic-release/commit-analyzer` (preset `conventionalcommits`)
+- `@semantic-release/release-notes-generator` (preset `conventionalcommits`)
+- `@semantic-release/changelog`
+- `@semantic-release/git`
+
+Archivos:
+- `.releaserc.json`: configuración de semantic-release.
+- `package.json`: scripts `semantic-release` y `semantic-release:dry`.
+- `package-lock.json`: dependencias instaladas.
+
+### Ramas
+
+- **Desarrollo:** `develop`.
+- **Release:** `main`.
+
+### Tag inicial
+
+Para que semantic-release parta de `0.1.0`, se creó el tag `v0.1.0` en el commit base (`0a63300`). Sin este tag, semantic-release publicaría `1.0.0` por defecto.
+
+### QA local
+
+```bash
+npm run semantic-release:dry
+```
+
+Este comando ejecuta semantic-release en modo dry-run sobre la rama `feature/021-semantic-release` y muestra la versión que se publicaría sin modificar el repo.
+
+### Notas
+
+- El plugin `@semantic-release/github` se omite de `.releaserc.json` porque requiere un token (`GH_TOKEN`/`GITHUB_TOKEN`) y un repositorio remoto configurado. Se debe agregar en CI cuando exista el repo remoto.
+- En CI, semantic-release debe correr solo en merges a `main` y con el token de GitHub configurado.
 
 ## Checklist antes de publicar 0.1.1
 
