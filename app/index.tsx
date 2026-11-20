@@ -15,7 +15,7 @@ import { getCurrentLocation } from "@/services/location";
 import { geocodeFirst, type GeocodingResult } from "@/services/geocoding";
 import type { MapPlace } from "@/utils/mapGeometry";
 import { getCityCenter } from "@/utils/mapGeometry";
-import { getPreferences } from "@/db/repositories";
+import { getPreferences, saveTripHistoryItem } from "@/db/repositories";
 import type { UserPreferences } from "@/domain/models";
 
 type ActiveField = "origin" | "destination" | null;
@@ -119,6 +119,17 @@ export default function HomeScreen() {
       return;
     }
 
+    if (origin.label && origin.label !== "Mi ubicación") {
+      saveTripHistoryItem({
+        originLabel: origin.label,
+        originLatitude: origin.latitude,
+        originLongitude: origin.longitude,
+        destinationLabel: dest.label ?? destinationQuery,
+        destinationLatitude: dest.latitude,
+        destinationLongitude: dest.longitude,
+      }).catch(console.warn);
+    }
+
     router.push({
       pathname: "/results",
       params: {
@@ -220,6 +231,10 @@ export default function HomeScreen() {
       </View>
 
       <View style={styles.bottomRow}>
+        <Pressable style={styles.bottomItem} onPress={() => router.push("/history")}>
+          <Text style={styles.bottomIcon}>↺</Text>
+          <Text style={styles.bottomLabel}>Historial</Text>
+        </Pressable>
         <Pressable style={styles.bottomItem} onPress={() => router.push("/saved")}>
           <Text style={styles.bottomIcon}>☆</Text>
           <Text style={styles.bottomLabel}>Guardados</Text>
