@@ -230,10 +230,10 @@ ello, la prioridad es implementar la integración real de transporte:
 - **Depends on:** BL-010, BL-011
 - **Status:** todo
 
-### BL-027 · Evaluar opciones de hosting/distribución de la app · P1
-- **What:** Documentar alternativas para hostear/distribuir la app Android/iOS y recomendar la mejor opción según el stack (Expo/React Native) y presupuesto.
+### BL-027 · Evaluar opciones de hosting/distribución de la app móvil · P1
+- **What:** Documentar alternativas para distribuir la app Android/iOS y recomendar la mejor opción según el stack (Expo/React Native) y presupuesto. El backend usará FastAPI Cloud (https://fastapicloud.com).
 - **Acceptance criteria:**
-  - [ ] Comparativa de opciones: Google Play Store, Apple App Store, Expo Application Services (EAS), Firebase App Distribution, TestFlight, Microsoft App Center, APK directo, FDroid.
+  - [ ] Comparativa de opciones móviles: Google Play Store, Apple App Store, Expo Application Services (EAS), Firebase App Distribution, TestFlight, Microsoft App Center, APK directo, FDroid.
   - [ ] Recomendación principal justificada (costo, facilidad, OTA updates, CI/CD).
   - [ ] Pasos de alto nivel para la opción recomendada documentados en `docs/deployment.md`.
 - **Depends on:** —
