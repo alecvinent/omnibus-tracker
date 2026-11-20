@@ -4,7 +4,7 @@
 
 **Created**: 2026-11-20
 
-**Status**: In Progress
+**Status**: Done
 
 **Input**: User description: "Mostrar itinerarios, paradas y transbordos en resultados"
 

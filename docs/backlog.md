@@ -137,12 +137,12 @@ ello, la prioridad es implementar la integración real de transporte:
 ### BL-008 · Mostrar itinerarios, paradas y transbordos en resultados · P0
 - **What:** La pantalla de resultados solo muestra un aviso. Presentar alternativas ordenadas por duración y transbordos, paradas de subida/bajada/intermedias, tiempo de caminata y ETA.
 - **Acceptance criteria:**
-  - [ ] Lista de itinerarios con duración, caminata y transbordos
-  - [ ] Detalle de paradas y piernas (legs) por itinerario
-  - [ ] Estados de carga, vacío y error
-  - [ ] Sin datos inventados si el servicio no está configurado
+  - [x] Lista de itinerarios con duración, caminata y transbordos
+  - [x] Detalle de paradas y piernas (legs) por itinerario
+  - [x] Estados de carga, vacío y error
+  - [x] Sin datos inventados si el servicio no está configurado
 - **Depends on:** BL-006, BL-007
-- **Status:** in-progress
+- **Status:** done
 
 ### BL-026 · Usar ubicación GPS como origen por defecto · P0
 - **What:** Al abrir la app, el origen debe resolverse automáticamente con la ubicación GPS del usuario en lugar de usar un punto fijo de la ciudad seleccionada. Si no hay permiso o GPS disponible, se usa el centro de la ciudad configurada como fallback.
