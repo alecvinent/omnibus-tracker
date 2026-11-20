@@ -61,14 +61,24 @@ Para Ómnibus Tracker se recomienda:
 3. **Actualizaciones:**
    - Usar **EAS Update** para corregir bugs en la capa de JavaScript sin necesidad de un nuevo build nativo.
 
+### Variables de entorno en builds
+
+Las variables `EXPO_PUBLIC_*` se empaquetan en el build en el momento de compilar. Para EAS Build se configuran por perfil en `eas.json` (`build.<perfil>.env`).
+
+Perfil actual:
+- **development / preview / production**: `EXPO_PUBLIC_API_URL=https://omnibus-tracker.fastapicloud.dev/`.
+
+> Antes de publicar en producción, cambiar `production.env.EXPO_PUBLIC_API_URL` a la URL definitiva del backend.
+
 ### Pasos de alto nivel con EAS
 
 1. Instalar EAS CLI: `npm install -g eas-cli`.
 2. Iniciar sesión: `eas login`.
 3. Configurar proyecto: `eas build:configure`.
 4. Generar build de desarrollo/preview: `eas build --platform android --profile development`.
-5. Enviar a store: `eas submit --platform android` / `eas submit --platform ios`.
-6. Publicar OTA update: `eas update --branch production --message "fix: ..."`.
+5. Generar APK de preview: `eas build --platform android --profile preview`.
+6. Enviar a store: `eas submit --platform android` / `eas submit --platform ios`.
+7. Publicar OTA update: `eas update --branch production --message "fix: ..."`.
 
 ---
 
