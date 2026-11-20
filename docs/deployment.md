@@ -26,6 +26,9 @@ Se elige **FastAPI Cloud** como plataforma de hosting del backend porque:
 - `NOMINATIM_USER_AGENT`: identificador para las peticiones a Nominatim.
 - Posibles credenciales de la IMM cuando se integre la API oficial (BL-001 / BL-002).
 
+**URL de desarrollo configurada:**
+- `EXPO_PUBLIC_API_URL=https://omnibus-tracker.fastapicloud.dev/` (ver `.env.dev` y `.env.example`).
+
 ---
 
 ## App móvil
@@ -71,7 +74,8 @@ Para Ómnibus Tracker se recomienda:
 
 ## Decisiones pendientes
 
-- [ ] Crear cuenta en FastAPI Cloud y desplegar backend.
+- [x] Configurar URL de desarrollo de FastAPI Cloud en `.env.dev`.
+- [ ] Desplegar backend estable en FastAPI Cloud y validar `/health`.
 - [ ] Crear cuenta de Google Play Console ($25).
 - [ ] Crear Apple Developer Program ($99/año) si se quiere soportar iOS.
 - [ ] Configurar `eas.json` con perfiles de build (development, preview, production).
