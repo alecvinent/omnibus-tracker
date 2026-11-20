@@ -4,7 +4,7 @@
 
 **Created**: 2026-11-20
 
-**Status**: In Progress
+**Status**: Done
 
 **Input**: User description: "Guardar historial de rutas del usuario. Son las rutas frecuentes del usuario."
 
