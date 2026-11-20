@@ -54,10 +54,19 @@ Archivos:
 
 - **Desarrollo:** `develop`.
 - **Release:** `main`.
+- **Remoto:** `https://github.com/alecvinent/omnibus-tracker.git`
 
 ### Tag inicial
 
 Para que semantic-release parta de `0.1.0`, se creó el tag `v0.1.0` en el commit base (`0a63300`). Sin este tag, semantic-release publicaría `1.0.0` por defecto.
+
+### Push inicial
+
+```bash
+git remote add origin https://github.com/alecvinent/omnibus-tracker.git
+git push -u origin develop
+git push origin v0.1.0
+```
 
 ### QA local
 

@@ -1,6 +1,5 @@
 {
   "branches": ["main"],
-  "repositoryUrl": "file://C:/working/projects/ideas-I+D+I/omnibus-tracker",
   "plugins": [
     "@semantic-release/commit-analyzer",
     "@semantic-release/release-notes-generator",

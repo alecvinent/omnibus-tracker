@@ -4,7 +4,7 @@
   "private": true,
   "repository": {
     "type": "git",
-    "url": "https://github.com/badwarren/omnibus-tracker.git"
+    "url": "https://github.com/alecvinent/omnibus-tracker.git"
   },
   "main": "expo-router/entry",
   "scripts": {

@@ -174,6 +174,16 @@ ello, la prioridad es implementar la integración real de transporte:
 - **Depends on:** BL-009
 - **Status:** todo
 
+### BL-024 · Mostrar paradas de la ruta seleccionada en el mapa · P1
+- **What:** Al seleccionar un itinerario o ruta, dibujar en el mapa las paradas de subida, bajada e intermedias correspondientes a esa ruta.
+- **Acceptance criteria:**
+  - [ ] Las paradas del itinerario seleccionado se muestran como marcadores sobre MapLibre.
+  - [ ] Se distinguen visualmente parada de subida, parada de bajada y paradas intermedias.
+  - [ ] Al cambiar de itinerario alternativo, se actualizan los marcadores.
+  - [ ] Sin geometrías ni paradas inventadas si no hay datos oficiales.
+- **Depends on:** BL-017
+- **Status:** todo
+
 ## Épica 4: Calidad y habilitadores de ingeniería
 
 ### BL-010 · Typecheck y lint como gate · P1
