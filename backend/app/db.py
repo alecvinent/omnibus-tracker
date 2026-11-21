@@ -5,7 +5,8 @@ import sqlite3
 from datetime import datetime, timezone
 from pathlib import Path
 
-DB_PATH = Path(os.getenv("API_KEYS_DB_PATH", "/data/api_keys.db"))
+_DEFAULT_DB_PATH = Path(__file__).resolve().parent.parent / "data" / "api_keys.db"
+DB_PATH = Path(os.getenv("API_KEYS_DB_PATH", _DEFAULT_DB_PATH))
 
 
 def _get_connection() -> sqlite3.Connection:
