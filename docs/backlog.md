@@ -199,10 +199,10 @@ ello, la prioridad es implementar la integración real de transporte:
 ### BL-010 · Typecheck y lint como gate · P1
 - **What:** No hay gate de calidad estático. Asegurar `tsc --noEmit` y `expo lint` limpios en cada cambio.
 - **Acceptance criteria:**
-  - [ ] `npm run typecheck` y `npm run lint` pasan sin errores
+  - [x] `npm run typecheck` y `npm run lint` pasan sin errores
   - [x] Documentados en `AGENTS.md` como gates de merge
 - **Depends on:** —
-- **Status:** in-progress
+- **Status:** done
 
 ### BL-011 · Tests unitarios para dominio, db y servicios · P1
 - **What:** No existen tests. Agregar cobertura unitaria para modelos, repositorios SQLite y servicios (planificador, ubicación).
