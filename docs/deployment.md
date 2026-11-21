@@ -24,7 +24,7 @@ Se elige **FastAPI Cloud** como plataforma de hosting del backend porque:
 
 **Variables de entorno mínimas en FastAPI Cloud:**
 - `NOMINATIM_USER_AGENT`: identificador para las peticiones a Nominatim.
-- Posibles credenciales de la IMM cuando se integre la API oficial (BL-001 / BL-002).
+- `IMM_CLIENT_ID` / `IMM_CLIENT_SECRET`: credenciales OAuth2 de la app registrada en el portal de la IMM (BL-001 / BL-002). Configurarlas solo en el backend; `IMM_TOKEN_URL` y `IMM_API_BASE_URL` tienen valores por defecto documentados en `backend/README.md`. La API limita a 10 llamadas/minuto.
 
 **URL de desarrollo configurada:**
 - `EXPO_PUBLIC_API_URL=https://omnibus-tracker.fastapicloud.dev/` (ver `.env.dev` y `.env.example`).

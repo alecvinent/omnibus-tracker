@@ -6,7 +6,7 @@
 - `src/domain/`: modelos de negocio independientes de Expo.
 - `src/db/`: persistencia local SQLite.
 - `src/services/`: adaptadores de ubicación, geocodificación y planificación.
-- `backend/`: integración segura con IMM y motor OTP.
+- `backend/`: integración segura con la API de la IMM (OAuth2 en servidor, caché por límite de 10 llamadas/minuto) y motor OTP sobre el GTFS de la IMM.
 
 ## Flujo esperado de planificación
 

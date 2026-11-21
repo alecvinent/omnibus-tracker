@@ -2,8 +2,21 @@
 
 FastAPI inicial. Mantener aquí las credenciales privadas de la API de la IMM; nunca incluirlas en `EXPO_PUBLIC_*`.
 
+## API de transporte de la IMM (BL-001)
+
+Fuente principal: https://api.montevideo.gub.uy/apidocs/publictransport
+
+1. Crear cuenta gratuita en https://api.montevideo.gub.uy/signup (o usar ID Uruguay).
+2. Registrar la aplicación "Ómnibus Tracker" y obtener `client_id` y `client_secret`.
+3. Cargar las variables de entorno indicadas abajo. La API usa OAuth2 `client_credentials` contra `https://mvdapi-auth.montevideo.gub.uy/token` y limita las llamadas a **10 por minuto**, por lo que el consumo debe mediar por este backend con caché.
+
+Nunca commits credenciales reales: `backend/.env.example` contiene solo placeholders. Ver `docs/data-sources.md` para endpoints, términos y contacto.
+
 ## Variables de entorno
 
+- `IMM_CLIENT_ID` / `IMM_CLIENT_SECRET`: credenciales OAuth2 de la app registrada en el portal de la IMM. Solo en el backend; nunca en `EXPO_PUBLIC_*`.
+- `IMM_TOKEN_URL`: URL del token OAuth2. Por defecto `https://mvdapi-auth.montevideo.gub.uy/token`.
+- `IMM_API_BASE_URL`: base de la API IMM. Por defecto `https://api.montevideo.gub.uy/api/transportepublico`.
 - `ADMIN_API_KEY`: clave maestra para gestionar API keys vía `/admin/api-keys`. Configurarla fuera del repositorio.
 - `API_KEYS_DB_PATH`: ruta del SQLite con las API keys. Por defecto `backend/data/api_keys.db` (relativo al repositorio). En FastAPI Cloud se puede dejar el default porque la app corre desde `/app`.
 - `NOMINATIM_USER_AGENT`: identificador para las peticiones a Nominatim.
@@ -65,7 +78,7 @@ uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 Usá siempre `python -m pip`, no el `pip` global. No uses la carpeta `backend/.env` como venv (confunde con variables de entorno); el entorno virtual correcto es `backend/.venv`.
 
 Próxima implementación:
-1. Cliente IMM con autenticación en servidor.
+1. Cliente IMM en servidor con OAuth2 `client_credentials`, timeout, reintentos y respeto del límite de 10 llamadas/minuto (BL-002).
 2. Descarga/validación periódica del GTFS.
 3. OpenTripPlanner como motor de itinerarios.
 4. Adaptador de ETA y posición de vehículos.

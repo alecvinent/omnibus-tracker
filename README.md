@@ -14,7 +14,7 @@ Incluye:
 - Contratos y servicios desacoplados para planificación y datos de transporte.
 - Backend FastAPI inicial con health-check y contrato de planificación.
 
-Todavía no incluye cálculo real de itinerarios ni feed GTFS integrado. La API de transporte de la IMM requiere registro y credenciales; no se deben simular líneas, horarios o paradas oficiales. El siguiente paso es descargar/validar el GTFS oficial y conectar OpenTripPlanner.
+Todavía no incluye cálculo real de itinerarios ni feed GTFS integrado. La fuente principal es la API de transporte público de la IMM (https://api.montevideo.gub.uy/apidocs/publictransport): requiere cuenta gratuita y credenciales OAuth2 que se guardan solo en el backend. No se deben simular líneas, horarios o paradas oficiales. El siguiente paso es descargar/validar el GTFS de la IMM y conectar OpenTripPlanner.
 
 ## Requisitos
 
@@ -76,11 +76,15 @@ Configurar `EXPO_PUBLIC_MAP_STYLE_URL` en `.env` o en el entorno de build.
 
 ## Datos oficiales de transporte
 
-- API IMM: https://api.montevideo.gub.uy/apidocs/publictransport
+- API IMM (posiciones en tiempo real y ETA): https://api.montevideo.gub.uy/apidocs/publictransport
+- Registro de cuenta gratuita: https://api.montevideo.gub.uy/signup
+- Especificación Swagger: https://api.montevideo.gub.uy/swagger/spec/publictransport.json
 - Datos abiertos: https://ckan.montevideo.gub.uy/
-- GTFS: consultar la API IMM; el feed estático se publica en `buses/gtfs/static/latest/google_transit.zip`.
+- GTFS de la IMM: `https://api.montevideo.gub.uy/api/transportepublico/buses/gtfs/static/latest/google_transit.zip`
 
-No incluir tokens privados en variables `EXPO_PUBLIC_*`: se incorporan al bundle móvil. Las credenciales de la IMM deben permanecer en el backend.
+La API usa OAuth2 `client_credentials` contra `https://mvdapi-auth.montevideo.gub.uy/token` y tiene un límite de **10 llamadas por minuto**; por eso se consume desde el backend, con caché, nunca desde la app. Ver `docs/data-sources.md`.
+
+No incluir tokens ni credenciales en variables `EXPO_PUBLIC_*`: se incorporan al bundle móvil. Las credenciales de la IMM (`IMM_CLIENT_ID` / `IMM_CLIENT_SECRET`) deben permanecer en el backend; ver `backend/.env.example`.
 
 ## Backend
 
@@ -108,8 +112,8 @@ backend/
 
 ## Decisiones pendientes antes de producción
 
-1. Registrar una aplicación en el portal de APIs de la IMM y verificar límites/credenciales.
-2. Validar el contenido, licencia, actualización y cobertura del GTFS.
+1. Registrar una cuenta y una aplicación en el portal de APIs de la IMM (BL-001) y cargar `IMM_CLIENT_ID` / `IMM_CLIENT_SECRET` solo en el backend.
+2. Validar el contenido, licencia, actualización y cobertura del GTFS publicado por la IMM.
 3. Elegir proveedor de tiles para producción y revisar atribución/licencia.
-4. Desplegar backend HTTPS; no exponer credenciales en la app.
+4. Desplegar backend HTTPS; no exponer credenciales de la IMM ni API keys del backend en la app.
 5. Implementar tests de integración con el feed real y validar itinerarios en terreno.

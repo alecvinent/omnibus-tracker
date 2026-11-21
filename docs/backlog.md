@@ -55,16 +55,16 @@ ello, la prioridad es implementar la integración real de transporte:
 ## Épica 1: Integración de datos (GTFS + OTP en backend)
 
 ### BL-001 · Registrar la aplicación en el portal de APIs de la IMM y verificar límites/credenciales · P0
-- **What:** Sin registro no hay acceso a la API pública de transporte de la IMM (posiciones, ETA, GTFS). Registrar la app, obtener credenciales y documentar límites/cuotas.
+- **What:** Sin registro no hay acceso a la API pública de transporte de la IMM (posiciones en tiempo real, ETA y GTFS). Registrar la app en `https://api.montevideo.gub.uy/signup`, obtener credenciales OAuth2 (`client_credentials`) y documentar límites/cuotas. Verificado: límite de 10 llamadas/minuto, consumo mediado por backend.
 - **Acceptance criteria:**
-  - [x] Aplicación registrada en el portal de APIs de la IMM; credenciales almacenadas solo en el backend (nunca en `EXPO_PUBLIC_*`)
-  - [x] Límites, cuotas y términos de uso documentados en `docs/data-sources.md`
-  - [x] Credenciales rotadas/revocables y fuera del repositorio (`.env` gitignored)
+  - [ ] Registro manual completado en el portal de APIs de la IMM (paso del usuario; credenciales nunca en `EXPO_PUBLIC_*`)
+  - [x] Límites, cuotas, endpoints, OAuth2 y términos de uso documentados en `docs/data-sources.md`
+  - [x] Placeholders de configuración en `backend/.env.example`; credenciales reales fuera del repositorio (`.env` gitignored)
 - **Depends on:** —
-- **Status:** done
+- **Status:** in-progress
 
 ### BL-002 · Cliente IMM con autenticación en servidor · P0
-- **What:** El backend no tiene cliente para la API de la IMM. Implementar un cliente autenticado en servidor con manejo de errores y reintentos.
+- **What:** El backend no tiene cliente para la API de la IMM. Implementar un cliente OAuth2 `client_credentials` en servidor (token en `https://mvdapi-auth.montevideo.gub.uy/token`) con manejo de errores, timeouts, reintentos y respeto del límite de 10 llamadas/minuto.
 - **Acceptance criteria:**
   - [ ] Módulo de cliente IMM en `backend/app/` con autenticación por token/credencial de servidor
   - [ ] Manejo de errores HTTP y timeouts; sin credenciales en logs

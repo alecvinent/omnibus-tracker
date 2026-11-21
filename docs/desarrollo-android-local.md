@@ -110,5 +110,5 @@ npm run eas:build:development
 ## Recordatorio
 
 - **No usar Expo Go** para este repo.
-- Credenciales IMM / APIs: solo en el **backend**, nunca en `EXPO_PUBLIC_*` con secretos.
+- Credenciales de la API IMM (`IMM_CLIENT_ID` / `IMM_CLIENT_SECRET`) y API keys del backend: solo en el **backend**, nunca en `EXPO_PUBLIC_*` con secretos. Registro: https://api.montevideo.gub.uy/signup; ver `docs/data-sources.md`.
 - MapLibre en el componente actual puede ser placeholder; el binario nativo sí incluye MapLibre.
