@@ -5,7 +5,7 @@ FastAPI inicial. Mantener aquí las credenciales privadas de la API de la IMM; n
 ## Variables de entorno
 
 - `ADMIN_API_KEY`: clave maestra para gestionar API keys vía `/admin/api-keys`. Configurarla fuera del repositorio.
-- `API_KEYS_DB_PATH`: ruta del SQLite con las API keys. Por defecto `/data/api_keys.db`.
+- `API_KEYS_DB_PATH`: ruta del SQLite con las API keys. Por defecto `backend/data/api_keys.db` (relativo al repositorio). En FastAPI Cloud se puede dejar el default porque la app corre desde `/app`.
 - `NOMINATIM_USER_AGENT`: identificador para las peticiones a Nominatim.
 
 ## Endpoints públicos/protegidos
