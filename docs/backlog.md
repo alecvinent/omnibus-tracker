@@ -240,6 +240,16 @@ ello, la prioridad es implementar la integración real de transporte:
 - **Depends on:** BL-010
 - **Status:** done
 
+### BL-032 · Dibujar línea de preview de ruta en el mapa nativo · P0
+- **What:** Al seleccionar origen y destino en la pantalla principal (o al ver resultados), el mapa nativo muestra los marcadores pero no la línea que une ambos puntos ni ajusta bien la cámara. Agregar una línea de preview y corregir el framing.
+- **Acceptance criteria:**
+  - [x] `MapView.native.tsx` dibuja una línea entre origen y destino cuando ambos existen.
+  - [x] Si hay un itinerario con `shape`, se dibuja la geometría real del recorrido.
+  - [x] La cámara se ajusta a los bounds de origen/destino/paradas.
+  - [x] `npm run typecheck` y `npm run lint` pasan sin errores.
+- **Depends on:** BL-019, BL-029
+- **Status:** done
+
 ### BL-027 · Evaluar opciones de hosting/distribución de la app móvil · P1
 - **What:** Documentar alternativas para distribuir la app Android/iOS y recomendar la mejor opción según el stack (Expo/React Native) y presupuesto. El backend usará FastAPI Cloud (https://fastapicloud.com).
 - **Acceptance criteria:**

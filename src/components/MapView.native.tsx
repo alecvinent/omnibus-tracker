@@ -1,8 +1,12 @@
-import { useEffect, useMemo, useRef } from "react";
+import { useMemo, useRef } from "react";
 import { StyleSheet, View } from "react-native";
 import {
   Camera,
+  type CameraBoundsStop,
+  type CameraCenterStop,
   type CameraRef,
+  GeoJSONSource,
+  Layer,
   Marker,
   Map,
 } from "@maplibre/maplibre-react-native";
@@ -11,7 +15,9 @@ import { PlannedItinerary, TransitStop } from "@/domain/models";
 import {
   boundsForPlaces,
   MONTEVIDEO_CENTER,
+  routeLineFeature,
   toLngLat,
+  type MapPlace,
 } from "@/utils/mapGeometry";
 import type { TripMapViewProps } from "./MapView.types";
 
@@ -72,6 +78,35 @@ function boundsForStops(stops: StopMarker[]): [number, number, number, number] |
   ];
 }
 
+function previewRouteFeature(origin: MapPlace, destination: MapPlace): GeoJSON.Feature<GeoJSON.LineString> {
+  return routeLineFeature(origin, destination);
+}
+
+function itineraryRouteFeature(itinerary: PlannedItinerary): GeoJSON.Feature<GeoJSON.LineString> | null {
+  const coordinates: [number, number][] = [];
+  for (const leg of itinerary.legs) {
+    if (leg.shape && leg.shape.length > 0) {
+      // Evitar duplicar el punto de unión entre legs.
+      const shape = leg.shape as [number, number][];
+      if (coordinates.length > 0 && shape.length > 0) {
+        const last = coordinates[coordinates.length - 1];
+        const first = shape[0];
+        if (last[0] === first[0] && last[1] === first[1]) {
+          coordinates.push(...shape.slice(1));
+          continue;
+        }
+      }
+      coordinates.push(...shape);
+    }
+  }
+  if (coordinates.length === 0) return null;
+  return {
+    type: "Feature",
+    properties: {},
+    geometry: { type: "LineString", coordinates },
+  };
+}
+
 export function MapView({ origin, destination, center = MONTEVIDEO_CENTER, itinerary }: TripMapViewProps) {
   const cameraRef = useRef<CameraRef>(null);
 
@@ -92,24 +127,60 @@ export function MapView({ origin, destination, center = MONTEVIDEO_CENTER, itine
     ];
   }, [origin, destination, stopMarkers]);
 
-  useEffect(() => {
-    if (!cameraRef.current) return;
+  const previewFeature = useMemo<GeoJSON.Feature<GeoJSON.LineString> | null>(() => {
+    if (!origin || !destination) return null;
+    return previewRouteFeature(origin, destination);
+  }, [origin, destination]);
+
+  const itineraryFeature = useMemo<GeoJSON.Feature<GeoJSON.LineString> | null>(() => {
+    if (!itinerary) return null;
+    return itineraryRouteFeature(itinerary);
+  }, [itinerary]);
+
+  const cameraStop = useMemo<CameraCenterStop | CameraBoundsStop>(() => {
     if (bounds) {
-      cameraRef.current.fitBounds(bounds, {
+      return {
+        bounds,
         padding: { top: 50, right: 36, bottom: 50, left: 36 },
         duration: 450,
-      });
-      return;
+        easing: "ease",
+      };
     }
     const point = origin ?? destination;
-    const lngLat = point ? toLngLat(point) : center;
-    cameraRef.current.easeTo({ center: lngLat, zoom: 13, duration: 300 });
+    return {
+      center: point ? toLngLat(point) : center,
+      zoom: 13,
+      duration: 300,
+      easing: "ease",
+    };
   }, [bounds, origin, destination, center]);
 
   return (
     <View style={styles.wrap}>
       <Map mapStyle={MAP_STYLE_URL} style={styles.map}>
-        <Camera ref={cameraRef} initialViewState={{ center, zoom: 13 }} />
+        <Camera ref={cameraRef} {...cameraStop} />
+        {previewFeature ? (
+          <GeoJSONSource id="route-preview-source" data={previewFeature}>
+            <Layer
+              type="line"
+              id="route-preview-line"
+              source="route-preview-source"
+              paint={{ "line-color": "#167D72", "line-width": 4, "line-opacity": 0.85 }}
+              layout={{ "line-cap": "round", "line-join": "round" }}
+            />
+          </GeoJSONSource>
+        ) : null}
+        {itineraryFeature ? (
+          <GeoJSONSource id="route-itinerary-source" data={itineraryFeature}>
+            <Layer
+              type="line"
+              id="route-itinerary-line"
+              source="route-itinerary-source"
+              paint={{ "line-color": "#E17A42", "line-width": 4, "line-opacity": 0.9 }}
+              layout={{ "line-cap": "round", "line-join": "round" }}
+            />
+          </GeoJSONSource>
+        ) : null}
         {origin ? (
           <Marker id="origin" lngLat={toLngLat(origin)} anchor="bottom">
             <View style={[styles.pin, styles.pinOrigin]} />
