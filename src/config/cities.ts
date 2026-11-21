@@ -23,7 +23,7 @@ export const SUPPORTED_CITIES: CityConfig[] = [
     id: "montevideo-uy",
     name: "Montevideo",
     country: "Uruguay",
-    label: "la ciudad por defecto",
+    label: "Montevideo, Uruguay",
     center: [-56.1645, -34.9011],
     boundingBox: [-34.95, -34.8, -56.3, -56.0],
   },

@@ -250,6 +250,15 @@ ello, la prioridad es implementar la integración real de transporte:
 - **Depends on:** BL-019, BL-029
 - **Status:** done
 
+### BL-033 · Mostrar ciudad y país en selector de preferencias · P0
+- **What:** El selector de ciudad en `preferences.tsx` muestra "la ciudad por defecto" en lugar del nombre y país de la ciudad configurada.
+- **Acceptance criteria:**
+  - [x] `src/config/cities.ts` usa `"Montevideo, Uruguay"` como etiqueta de la ciudad por defecto.
+  - [x] El selector y la fila de preferencias muestran ciudad y país.
+  - [x] `npm run typecheck` y `npm run lint` pasan sin errores.
+- **Depends on:** BL-022
+- **Status:** in-progress
+
 ### BL-027 · Evaluar opciones de hosting/distribución de la app móvil · P1
 - **What:** Documentar alternativas para distribuir la app Android/iOS y recomendar la mejor opción según el stack (Expo/React Native) y presupuesto. El backend usará FastAPI Cloud (https://fastapicloud.com).
 - **Acceptance criteria:**
