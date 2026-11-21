@@ -230,6 +230,16 @@ ello, la prioridad es implementar la integración real de transporte:
 - **Depends on:** BL-010, BL-011
 - **Status:** todo
 
+### BL-029 · APK standalone local se queda en blanco en el teléfono · P0
+- **What:** La APK generada con `npm run android:apk` es una variante debug de `expo-dev-client` que no embebe el bundle JS. Al instalarla y abrirla sin Metro corriendo la app se queda en blanco. Además hay errores menores que impiden un build limpio: `ALTER TABLE` no idempotente en SQLite y error de tipos en `MapView.native.tsx`.
+- **Acceptance criteria:**
+  - [ ] `npm run android:apk` genera una APK release que embebe el bundle JS y abre sola en el teléfono.
+  - [ ] `src/db/database.ts` es idempotente: no falla si `city_id` ya existe.
+  - [ ] `npm run typecheck` y `npm run lint` pasan sin errores.
+  - [ ] `TESTEAR_APP.md` y/o `README.md` reflejan que la APK local ahora es standalone.
+- **Depends on:** BL-010
+- **Status:** in-progress
+
 ### BL-027 · Evaluar opciones de hosting/distribución de la app móvil · P1
 - **What:** Documentar alternativas para distribuir la app Android/iOS y recomendar la mejor opción según el stack (Expo/React Native) y presupuesto. El backend usará FastAPI Cloud (https://fastapicloud.com).
 - **Acceptance criteria:**
@@ -290,6 +300,20 @@ ello, la prioridad es implementar la integración real de transporte:
   - [ ] Procedimiento de revalidación y recarga en OTP documentado
   - [ ] Alerta/notificación cuando haya un feed nuevo
 - **Depends on:** BL-003, BL-004
+- **Status:** todo
+
+## Épica 8: Seguridad
+
+### BL-030 · Proteger endpoints de la API con API key gestionada desde el backend · P0
+- **What:** Los endpoints públicos del backend (`/v1/geocode/search`, `/v1/trips/plan`, etc.) deben requerir una API key válida. El backend debe exponer mecanismos para generar, listar, rotar y revocar esas keys sin modificar código.
+- **Acceptance criteria:**
+  - [ ] Cada petición a endpoints protegidos debe incluir una API key válida (p. ej. header `X-API-Key`).
+  - [ ] Sin API key o con key inválida/revocada el backend responde `401 Unauthorized`.
+  - [ ] El backend expone endpoints/admin para crear, listar, rotar y revocar API keys (solo administrador/autenticado).
+  - [ ] La app móvil carga la API key desde variables de entorno (`EXPO_PUBLIC_API_KEY`) y la envía en cada request.
+  - [ ] Ninguna API key real se commitea al repositorio.
+  - [ ] Documentación en `backend/README.md` y/o `docs/security.md` explica el mecanismo.
+- **Depends on:** —
 - **Status:** todo
 
 ## Gobernanza
