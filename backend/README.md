@@ -2,10 +2,36 @@
 
 FastAPI inicial. Mantener aquí las credenciales privadas de la API de la IMM; nunca incluirlas en `EXPO_PUBLIC_*`.
 
-## Endpoints actuales
+## Variables de entorno
 
-- `GET /health`
-- `GET /v1/geocode/search?q=...&limit=6&cityId=...` — búsqueda de lugares en la ciudad configurada (Nominatim mediado por servidor)
+- `ADMIN_API_KEY`: clave maestra para gestionar API keys vía `/admin/api-keys`. Configurarla fuera del repositorio.
+- `API_KEYS_DB_PATH`: ruta del SQLite con las API keys. Por defecto `/data/api_keys.db`.
+- `NOMINATIM_USER_AGENT`: identificador para las peticiones a Nominatim.
+
+## Endpoints públicos/protegidos
+
+- `GET /health` — estado del servicio (público)
+- `GET /v1/geocode/search?q=...&limit=6&cityId=...` — búsqueda de lugares (requiere `X-API-Key`)
+- `POST /v1/trips/plan` — planificación de viajes (requiere `X-API-Key`)
+
+## Gestión de API keys
+
+Los endpoints admin requieren el header `X-Admin-Key` con el valor de `ADMIN_API_KEY`.
+
+- `POST /admin/api-keys` — crear una nueva key (`{"name": "..."}`). Devuelve el valor **una sola vez**.
+- `GET /admin/api-keys?active_only=true` — listar keys.
+- `DELETE /admin/api-keys/{id}` — revocar una key.
+
+Ejemplo:
+
+```bash
+curl -H "X-Admin-Key: $ADMIN_API_KEY" \
+     -H "Content-Type: application/json" \
+     -d '{"name":"app-produccion"}' \
+     https://omnibus-tracker.fastapicloud.dev/admin/api-keys
+```
+
+Ver `docs/security.md` para más detalles.
 
 ```powershell
 cd backend

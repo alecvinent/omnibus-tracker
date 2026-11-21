@@ -307,14 +307,14 @@ ello, la prioridad es implementar la integración real de transporte:
 ### BL-030 · Proteger endpoints de la API con API key gestionada desde el backend · P0
 - **What:** Los endpoints públicos del backend (`/v1/geocode/search`, `/v1/trips/plan`, etc.) deben requerir una API key válida. El backend debe exponer mecanismos para generar, listar, rotar y revocar esas keys sin modificar código.
 - **Acceptance criteria:**
-  - [ ] Cada petición a endpoints protegidos debe incluir una API key válida (p. ej. header `X-API-Key`).
-  - [ ] Sin API key o con key inválida/revocada el backend responde `401 Unauthorized`.
-  - [ ] El backend expone endpoints/admin para crear, listar, rotar y revocar API keys (solo administrador/autenticado).
-  - [ ] La app móvil carga la API key desde variables de entorno (`EXPO_PUBLIC_API_KEY`) y la envía en cada request.
-  - [ ] Ninguna API key real se commitea al repositorio.
-  - [ ] Documentación en `backend/README.md` y/o `docs/security.md` explica el mecanismo.
+  - [x] Cada petición a endpoints protegidos debe incluir una API key válida (p. ej. header `X-API-Key`).
+  - [x] Sin API key o con key inválida/revocada el backend responde `401 Unauthorized`.
+  - [x] El backend expone endpoints/admin para crear, listar, rotar y revocar API keys (solo administrador/autenticado).
+  - [x] La app móvil carga la API key desde variables de entorno (`EXPO_PUBLIC_API_KEY`) y la envía en cada request.
+  - [x] Ninguna API key real se commitea al repositorio.
+  - [x] Documentación en `backend/README.md` y `docs/security.md` explica el mecanismo.
 - **Depends on:** —
-- **Status:** todo
+- **Status:** done
 
 ## Épica 9: Panel de administración
 
