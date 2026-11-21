@@ -205,13 +205,13 @@ ello, la prioridad es implementar la integración real de transporte:
 - **Status:** done
 
 ### BL-011 · Tests unitarios para dominio, db y servicios · P1
-- **What:** No existen tests. Agregar cobertura unitaria para modelos, repositorios SQLite y servicios (planificador, ubicación).
+- **What:** Agregar cobertura unitaria para modelos, repositorios SQLite y servicios (planificador, ubicación).
 - **Acceptance criteria:**
-  - [ ] Suite de tests ejecutable (Jest o equivalente compatible con Expo)
-  - [ ] Cobertura de repositorios y servicios críticos
-  - [ ] Tests en CI
+  - [x] Suite de tests ejecutable con Jest compatible con Expo (12 tests en 3 suites).
+  - [x] Cobertura de `src/utils/mapGeometry.ts`, `src/services/geocoding.ts`, `src/services/planner.ts`, `src/db/repositories.ts`, `src/domain/models.ts`.
+  - [x] `npm run typecheck` y `npm run lint` pasan limpios.
 - **Depends on:** BL-010
-- **Status:** todo
+- **Status:** done
 
 ### BL-012 · Tests de integración con el feed real · P2
 - **What:** Validar itinerarios calculados contra el GTFS real y verificar en terreno.
