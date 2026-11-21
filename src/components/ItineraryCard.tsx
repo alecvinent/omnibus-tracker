@@ -42,10 +42,24 @@ function LegRow({ leg, index }: { leg: TransitLeg; index: number }) {
   );
 }
 
-export function ItineraryCard({ itinerary }: { itinerary: PlannedItinerary }) {
+export function ItineraryCard({
+  itinerary,
+  selected,
+  onSelect,
+}: {
+  itinerary: PlannedItinerary;
+  selected?: boolean;
+  onSelect?: () => void;
+}) {
   const [expanded, setExpanded] = useState(false);
   return (
-    <Pressable onPress={() => setExpanded((v) => !v)} style={styles.card}>
+    <Pressable
+      onPress={() => {
+        onSelect?.();
+        setExpanded((v) => !v);
+      }}
+      style={[styles.card, selected && styles.cardSelected]}
+    >
       <View style={styles.summary}>
         <View style={styles.mainInfo}>
           <Text style={styles.duration}>{formatDuration(itinerary.durationMinutes)}</Text>
@@ -75,6 +89,12 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     padding: 15,
     gap: 10,
+    borderWidth: 2,
+    borderColor: "transparent",
+  },
+  cardSelected: {
+    borderColor: "#167D72",
+    backgroundColor: "#F0F9F7",
   },
   summary: {
     flexDirection: "row",
