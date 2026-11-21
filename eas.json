@@ -6,7 +6,7 @@
       "distribution": "internal",
       "env": {
         "EXPO_PUBLIC_API_URL": "https://omnibus-tracker.fastapicloud.dev/",
-        "EXPO_PUBLIC_MAP_STYLE_URL": "https://demotiles.maplibre.org/style.json"
+        "EXPO_PUBLIC_MAP_STYLE_URL": "https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json"
       }
     },
     "preview": {
@@ -14,7 +14,7 @@
       "android": { "buildType": "apk" },
       "env": {
         "EXPO_PUBLIC_API_URL": "https://omnibus-tracker.fastapicloud.dev/",
-        "EXPO_PUBLIC_MAP_STYLE_URL": "https://demotiles.maplibre.org/style.json"
+        "EXPO_PUBLIC_MAP_STYLE_URL": "https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json"
       }
     },
     "production": {
@@ -22,7 +22,7 @@
       "android": { "buildType": "app-bundle" },
       "env": {
         "EXPO_PUBLIC_API_URL": "https://omnibus-tracker.fastapicloud.dev/",
-        "EXPO_PUBLIC_MAP_STYLE_URL": "https://demotiles.maplibre.org/style.json"
+        "EXPO_PUBLIC_MAP_STYLE_URL": "https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json"
       }
     }
   }
