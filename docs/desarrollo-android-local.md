@@ -19,7 +19,7 @@ El SDK debe incluir (ya instalado con `sdkmanager`):
 
 Licencias: `sdkmanager --licenses` (aceptar todas).
 
-## Compilar APK debug local (dev client)
+## Compilar APK release local (standalone)
 
 Desde la raíz del proyecto:
 
@@ -36,24 +36,15 @@ Equivalente:
 Salida:
 
 ```text
-android\app\build\outputs\apk\debug\app-debug.apk
+android\app\build\outputs\apk\release\app-release.apk
 ```
 
 La primera compilación puede tardar **15–25 minutos**. Gradle necesita bastante RAM (`android/gradle.properties` usa heap ~6 GB).
 
-Compilar e instalar en un dispositivo conectado por ADB:
-
-```powershell
-$env:JAVA_HOME = "C:\working\projects\ideas-I+D+I\android-tools\jdk-17"
-$env:ANDROID_HOME = "C:\working\projects\ideas-I+D+I\android-tools\Sdk"
-$env:ANDROID_SDK_ROOT = $env:ANDROID_HOME
-node ./node_modules/expo/bin/cli run:android
-```
-
 Solo instalar el APK ya generado:
 
 ```powershell
-adb install -r android\app\build\outputs\apk\debug\app-debug.apk
+adb install -r android\app\build\outputs\apk\release\app-release.apk
 ```
 
 ## Metro (bundler JS)
@@ -61,8 +52,9 @@ adb install -r android\app\build\outputs\apk\debug\app-debug.apk
 Archivo `.env` en la raíz (no commitear secretos):
 
 ```env
-EXPO_PUBLIC_MAP_STYLE_URL=https://demotiles.maplibre.org/style.json
+EXPO_PUBLIC_MAP_STYLE_URL=https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json
 EXPO_PUBLIC_API_URL=http://192.168.1.9:8000
+EXPO_PUBLIC_API_KEY=cambia_por_tu_api_key
 ```
 
 Ajustá `192.168.1.9` a la IP Wi‑Fi de la PC (`ipconfig`). El backend FastAPI en `:8000` es **necesario** para el autocomplete de lugares (`GET /v1/geocode/search`). Con USB podés usar `EXPO_PUBLIC_API_URL=http://localhost:8000` y `adb reverse tcp:8000 tcp:8000` en lugar de la IP LAN.
@@ -108,7 +100,7 @@ npm run eas:build:development
 
 | Síntoma | Causa | Qué hacer |
 |---------|--------|-----------|
-| *Something went wrong* en **Expo Go** | Expo Go no soporta este proyecto | Instalar dev client (`app-debug.apk` local o build `development`) |
+| *Something went wrong* en **Expo Go** | Expo Go no soporta este proyecto | Instalar dev client (`app-release.apk` local o build `development`) |
 | Carga infinita en el teléfono | Metro inalcanzable, IP incorrecta o firewall | `REACT_NATIVE_PACKAGER_HOSTNAME`, misma Wi‑Fi, regla firewall |
 | Solo bundles `web` en consola | Abrís web, no la app nativa | Abrí Ómnibus Tracker y URL `http://IP:8081` |
 | `Gradle daemon disappeared` | Poca RAM | Reintentar; cerrar apps pesadas; heap en `gradle.properties` |
