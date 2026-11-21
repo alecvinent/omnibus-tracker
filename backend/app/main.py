@@ -4,7 +4,14 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
 from app.auth import verify_admin_key, verify_api_key
-from app.db import create_api_key, init_db, list_api_keys, revoke_api_key
+from app.db import (
+    create_api_key,
+    get_api_key,
+    init_db,
+    list_api_keys,
+    revoke_api_key,
+    rotate_api_key,
+)
 from app.geocode import search_places
 
 app = FastAPI(title="Ómnibus Tracker API", version="0.1.0")
@@ -126,3 +133,30 @@ def admin_revoke_api_key(
     if not revoked:
         raise HTTPException(status_code=404, detail="API key no encontrada o ya revocada.")
     return {"id": key_id, "status": "revoked"}
+
+
+class RotatedApiKeyResponse(BaseModel):
+    id: str
+    name: str
+    key: str
+    created_at: str
+    rotated_from: dict[str, str]
+
+
+@app.post("/admin/api-keys/{key_id}/rotate", response_model=RotatedApiKeyResponse)
+def admin_rotate_api_key(
+    key_id: str,
+    _admin: None = Depends(verify_admin_key),
+):
+    """Crea una nueva key activa y revoca la rotada; devuelve el valor una sola vez."""
+    existing = get_api_key(key_id)
+    if not existing or existing.get("revoked_at") is not None:
+        raise HTTPException(status_code=404, detail="API key no encontrada o ya revocada.")
+    new_row, plain_key = rotate_api_key(key_id)
+    return {
+        "id": new_row["id"],
+        "name": new_row["name"],
+        "key": plain_key,
+        "created_at": new_row["created_at"],
+        "rotated_from": {"id": key_id},
+    }

@@ -370,6 +370,21 @@ ello, la prioridad es implementar la integración real de transporte:
 - **Depends on:** BL-030
 - **Status:** todo
 
+### BL-036 · Backend: endpoint de rotación de API keys (crear nueva + revocar anterior) · P1
+- **Status:** done (backend + script local; tests unittest en backend/tests/test_api_key_rotation.py).
+- **What:** Agregar al backend un endpoint de rotación: crea una nueva API key (devolviendo su valor una sola vez) y revoca la key anterior, todo en una operación atómica. Además, un script CLI local (`backend/scripts/generate_api_key.py`) que genere una key contra la base SQLite sin levantar el servidor, usando el mismo formato y reglas de hashes.
+- **Acceptance criteria:**
+  - [ ] `POST /admin/api-keys/{id}/rotate` con autenticación admin: si `id` no existe → 404.
+  - [ ] Rota una key válida: responde la nueva key (plain) una sola vez, la vieja queda revocada y la nueva queda activa; nombre heredado de la rotada.
+  - [ ] La rotación del resultado: la nueva key funciona en endpoints protegidos (`X-API-Key` validado contra SQLite) y la rotada deja de funcionar.
+  - [ ] Rotar una key ya revocada → 404.
+  - [ ] Script `backend/scripts/generate_api_key.py`: acepta `--name` (y opcional `--output`), genera key, inserta hash en `backend/data/api_keys.db` (respeta `API_KEYS_DB_PATH`) y muestra la key por stdout; sin sistema servidor corriendo.
+  - [ ] Script es ejecutable (`python backend/scripts/generate_api_key.py`) y documentado en `backend/README.md`.
+  - [ ] Tests unitarios: endpoint de rotación (DB temporal) y script de generación.
+  - [ ] `docs/security.md` y `backend/README.md` reflejan el endpoint de rotación y el script.
+- **Depends on:** BL-030
+- **Status:** todo
+
 ## Gobernanza
 
 ### BL-016 · Adoptar el workflow de backlog · P0
