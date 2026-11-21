@@ -259,6 +259,15 @@ ello, la prioridad es implementar la integración real de transporte:
 - **Depends on:** BL-022
 - **Status:** in-progress
 
+### BL-034 · Actualizar guía de desarrollo Android a tiles y API key de producción · P2
+- **What:** `docs/desarrollo-android-local.md` aún recomienda tiles demo (`demotiles.maplibre.org`) y no menciona `EXPO_PUBLIC_API_KEY`. Actualizar la guía para reflejar la configuración actual de desarrollo.
+- **Acceptance criteria:**
+  - [x] La guía usa `EXPO_PUBLIC_MAP_STYLE_URL` de CARTO Voyager u otro proveedor de producción.
+  - [x] La guía incluye `EXPO_PUBLIC_API_KEY` como variable requerida.
+  - [x] Las rutas de APK reflejan la variante release standalone.
+- **Depends on:** BL-023, BL-030
+- **Status:** done
+
 ### BL-027 · Evaluar opciones de hosting/distribución de la app móvil · P1
 - **What:** Documentar alternativas para distribuir la app Android/iOS y recomendar la mejor opción según el stack (Expo/React Native) y presupuesto. El backend usará FastAPI Cloud (https://fastapicloud.com).
 - **Acceptance criteria:**
