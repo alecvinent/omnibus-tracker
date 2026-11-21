@@ -27,7 +27,6 @@ export async function initializeDatabase() {
       city_id TEXT
     );
     INSERT OR IGNORE INTO preferences (id) VALUES (1);
-    ALTER TABLE preferences ADD COLUMN city_id TEXT;
 
     CREATE TABLE IF NOT EXISTS trip_history (
       id TEXT PRIMARY KEY NOT NULL,
@@ -41,4 +40,12 @@ export async function initializeDatabase() {
     );
     CREATE INDEX IF NOT EXISTS idx_trip_history_created_at ON trip_history(created_at DESC);
   `);
+
+  // SQLite no soporta IF NOT EXISTS en ADD COLUMN; verificamos antes de migrar.
+  const columns = await db.getAllAsync<{ name: string }>(
+    "PRAGMA table_info(preferences);"
+  );
+  if (!columns.some((column) => column.name === "city_id")) {
+    await db.execAsync("ALTER TABLE preferences ADD COLUMN city_id TEXT;");
+  }
 }

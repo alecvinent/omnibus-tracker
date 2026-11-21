@@ -44,10 +44,18 @@ npm start
 
 ## APK
 
-Build local (con Android SDK configurado):
+Build local standalone (con Android SDK configurado):
 
 ```bash
-npm run prebuild
+npm run android:apk
+```
+
+Genera `android/app/build/outputs/apk/release/app-release.apk`, embebe el bundle JS y puede instalarse y abrirse sin Metro.
+
+Para desarrollo con hot reload:
+
+```bash
+npm start
 npm run android
 ```
 
