@@ -21,6 +21,8 @@ Los endpoints admin requieren el header `X-Admin-Key` con el valor de `ADMIN_API
 - `POST /admin/api-keys` — crear una nueva key (`{"name": "..."}`). Devuelve el valor **una sola vez**.
 - `GET /admin/api-keys?active_only=true` — listar keys.
 - `DELETE /admin/api-keys/{id}` — revocar una key.
+- `POST /admin/api-keys/{id}/rotate` — rotar una key: crea una nueva activa (valor una sola vez, nombre heredado) y revoca la anterior en una petición.
+- `POST /register/client-key` (BL-037) — registro de key por cliente: genera key única con datos del cliente (`name`/`deviceId`), devuelve `{id, name, key, created_at}` una sola vez; requiere `ADMIN_API_KEY`.
 
 Ejemplo:
 
@@ -38,6 +40,14 @@ cd backend
 pip install -r requirements.txt
 uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
+
+## Generar API keys sin el servidor
+
+```bash
+python scripts/generate_api_key.py --name "app-produccion" [--output keyfile.txt]
+```
+
+Inserta una key nueva en el SQLite de API keys (`API_KEYS_DB_PATH` o default `data/api_keys.db`) y la imprime una sola vez por stdout (o al archivo `--output`). Útil para crear keys locales contra el mismo `api_keys.db` del backend.
 
 ### WSL / Linux
 
