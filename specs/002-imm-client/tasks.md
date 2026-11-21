@@ -20,9 +20,9 @@
 ## Phase 3: Documentación y gates
 
 - [x] T008 Documentar uso y variables en `backend/README.md`.
-- [ ] T009 Marcar BL-002 `done` en `docs/backlog.md` tras merge.
-- [ ] T010 Gates: `npm run typecheck`, `npm run lint`, `npm run test`, tests backend y `ruff` si está disponible.
-- [ ] T011 Commit, merge a `develop`, push y borrado de rama.
+- [x] T009 Marcar BL-002 `done` en `docs/backlog.md` tras merge.
+- [x] T010 Gates: `npm run typecheck` limpio, `npm run lint` 0 errores (2 warnings preexistentes), `npm run test` 18/18, tests backend 26/26, `ruff check .` y `ruff check --select F` limpios.
+- [x] T011 Commit `17791db`, merge a `develop`, push `17791db` y borrado de rama.
 
 ## Analyze (pre-implementación)
 

@@ -66,12 +66,12 @@ ello, la prioridad es implementar la integración real de transporte:
 ### BL-002 · Cliente IMM con autenticación en servidor · P0
 - **What:** El backend no tiene cliente para la API de la IMM. Implementar un cliente OAuth2 `client_credentials` en servidor (token en `https://mvdapi-auth.montevideo.gub.uy/token`) con manejo de errores, timeouts, reintentos y respeto del límite de 10 llamadas/minuto.
 - **Acceptance criteria:**
-  - [ ] Módulo de cliente IMM en `backend/app/` con autenticación por token/credencial de servidor
-  - [ ] Manejo de errores HTTP y timeouts; sin credenciales en logs
-  - [ ] Tests unitarios del cliente (mock de HTTP) pasan
-  - [ ] `ruff check .` y `ruff check --select F` limpios (cuando se adopten)
+  - [x] Módulo de cliente IMM en `backend/app/` con autenticación por token/credencial de servidor
+  - [x] Manejo de errores HTTP y timeouts; sin credenciales en logs
+  - [x] Tests unitarios del cliente (mock de HTTP) pasan
+  - [x] `ruff check .` y `ruff check --select F` limpios
 - **Depends on:** BL-001
-- **Status:** in-progress
+- **Status:** done
 
 ### BL-003 · Descarga y validación periódica del GTFS · P0
 - **What:** Validar el feed estático GTFS de Montevideo (`/buses/gtfs/static/latest/google_transit.zip`) antes de habilitar el planificador: fechas, `agency.txt`, `routes.txt`, `trips.txt`, `stops.txt`, `stop_times.txt`, `shapes.txt`, calendario y excepciones.
