@@ -1,8 +1,9 @@
 /**
  * Geocodificación mediada por el backend (BL-006).
  */
-import { API_KEY, API_URL } from "@/config/env";
+import { API_URL } from "@/config/env";
 import { getCityById } from "@/config/cities";
+import { getClientApiKey } from "@/services/api-key";
 
 export type GeocodingResult = {
   id: string;
@@ -30,9 +31,10 @@ export async function searchPlaces(
   });
 
   const url = `${API_URL}/v1/geocode/search?${params}`;
+  const apiKey = await getClientApiKey();
   const response = await fetch(url, {
     headers: {
-      "X-API-Key": API_KEY,
+      "X-API-Key": apiKey ?? "",
     },
   });
   if (!response.ok) {

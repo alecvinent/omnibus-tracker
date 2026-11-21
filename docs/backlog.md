@@ -57,11 +57,11 @@ ello, la prioridad es implementar la integración real de transporte:
 ### BL-001 · Registrar la aplicación en el portal de APIs de la IMM y verificar límites/credenciales · P0
 - **What:** Sin registro no hay acceso a la API pública de transporte de la IMM (posiciones, ETA, GTFS). Registrar la app, obtener credenciales y documentar límites/cuotas.
 - **Acceptance criteria:**
-  - [ ] Aplicación registrada en el portal de APIs de la IMM; credenciales almacenadas solo en el backend (nunca en `EXPO_PUBLIC_*`)
-  - [ ] Límites, cuotas y términos de uso documentados en `docs/data-sources.md`
-  - [ ] Credenciales rotadas/revocables y fuera del repositorio (`.env` gitignored)
+  - [x] Aplicación registrada en el portal de APIs de la IMM; credenciales almacenadas solo en el backend (nunca en `EXPO_PUBLIC_*`)
+  - [x] Límites, cuotas y términos de uso documentados en `docs/data-sources.md`
+  - [x] Credenciales rotadas/revocables y fuera del repositorio (`.env` gitignored)
 - **Depends on:** —
-- **Status:** todo
+- **Status:** done
 
 ### BL-002 · Cliente IMM con autenticación en servidor · P0
 - **What:** El backend no tiene cliente para la API de la IMM. Implementar un cliente autenticado en servidor con manejo de errores y reintentos.
@@ -374,15 +374,30 @@ ello, la prioridad es implementar la integración real de transporte:
 - **Status:** done (backend + script local; tests unittest en backend/tests/test_api_key_rotation.py).
 - **What:** Agregar al backend un endpoint de rotación: crea una nueva API key (devolviendo su valor una sola vez) y revoca la key anterior, todo en una operación atómica. Además, un script CLI local (`backend/scripts/generate_api_key.py`) que genere una key contra la base SQLite sin levantar el servidor, usando el mismo formato y reglas de hashes.
 - **Acceptance criteria:**
-  - [ ] `POST /admin/api-keys/{id}/rotate` con autenticación admin: si `id` no existe → 404.
-  - [ ] Rota una key válida: responde la nueva key (plain) una sola vez, la vieja queda revocada y la nueva queda activa; nombre heredado de la rotada.
-  - [ ] La rotación del resultado: la nueva key funciona en endpoints protegidos (`X-API-Key` validado contra SQLite) y la rotada deja de funcionar.
-  - [ ] Rotar una key ya revocada → 404.
-  - [ ] Script `backend/scripts/generate_api_key.py`: acepta `--name` (y opcional `--output`), genera key, inserta hash en `backend/data/api_keys.db` (respeta `API_KEYS_DB_PATH`) y muestra la key por stdout; sin sistema servidor corriendo.
-  - [ ] Script es ejecutable (`python backend/scripts/generate_api_key.py`) y documentado en `backend/README.md`.
-  - [ ] Tests unitarios: endpoint de rotación (DB temporal) y script de generación.
-  - [ ] `docs/security.md` y `backend/README.md` reflejan el endpoint de rotación y el script.
+  - [x] `POST /admin/api-keys/{id}/rotate` con autenticación admin: si `id` no existe → 404.
+  - [x] Rota una key válida: responde la nueva key (plain) una sola vez, la vieja queda revocada y la nueva queda activa; nombre heredado de la rotada.
+  - [x] La rotación del resultado: la nueva key funciona en endpoints protegidos (`X-API-Key` validado contra SQLite) y la rotada deja de funcionar.
+  - [x] Rotar una key ya revocada → 404.
+  - [x] Script `backend/scripts/generate_api_key.py`: acepta `--name` (y opcional `--output`), genera key, inserta hash en `backend/data/api_keys.db` (respeta `API_KEYS_DB_PATH`) y muestra la key por stdout; sin sistema servidor corriendo.
+  - [x] Script es ejecutable (`python backend/scripts/generate_api_key.py`) y documentado en `backend/README.md`.
+  - [x] Tests unitarios: endpoint de rotación (DB temporal) y script de generación.
+  - [x] `docs/security.md` y `backend/README.md` reflejan el endpoint de rotación y el script.
 - **Depends on:** BL-030
+- **Status:** done
+
+### BL-037 · App: registrar key de cliente desde el cliente al instalar APK · P0
+- **What:** Cada instalación de la APK: la app llama al backend en la instalación/primer inicio (`POST /register/client-key`), el backend genera una key única con datos del cliente (nombre, id del dispositivo) y devuelve el valor una sola vez. La app guarda la key en SQLite local (`client_key`) y envía `X-API-Key` en requests a `/v1/*`. Rotación desde el cliente disponible vía `POST /admin/api-keys/{id}/rotate` (BL-036), que la app aplica localmente.
+- **Acceptance criteria:**
+  - [ ] Backend: `POST /register/client-key` devuelve `{id, name, key, created_at}`; según `ADMIN_API_KEY` faltante → 503.
+  - [ ] Datos de cliente: la key almacenada con su nombre (`name` del cliente).
+  - [ ] App: al instalar APK, si no hay key local, app llama a `POST /register/client-key` y guarda la nueva key.
+  - [ ] App: requests a `/v1/geocode/search` y `/v1/trips/plan` envían el `X-API-Key` del cliente guardado.
+  - [ ] App: rotar desde cliente (via endpoint admin, BL-036) guarda la nueva key local y deja de enviar la rotada.
+  - [ ] Tests backend: register endpoint (200 + campos, 503 sin ADMIN_API_KEY).
+  - [ ] Tests app: register/get/rotate client key (jest).
+  - [ ] Docs: `docs/security.md` y `backend/README.md` documentan `POST /register/client-key` y rotación desde cliente.
+  - [ ] `npm run typecheck` y `npm run lint` del frontend pasan (gates del repo).
+- **Depends on:** BL-030, BL-036
 - **Status:** todo
 
 ## Gobernanza

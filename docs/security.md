@@ -75,9 +75,19 @@ Rotación manual sin servidor:
 python backend/scripts/generate_api_key.py --name "app-produccion-2" [--output keyfile.txt]
 ```
 
-### Uso desde la app móvil
+### Registro de keys por cliente (BL-037)
 
-Configurar `EXPO_PUBLIC_API_KEY` en `.env`, `.env.dev` o en `eas.json`. La app envía el header automáticamente en `geocoding.ts` y `planner.ts`.
+Cada instalación de la APK: la app llama a `POST /register/client-key` (con `name` del cliente y `deviceId`), el backend genera una key única y devuelve el valor una sola vez; la app guarda la key en SQLite local (`client_key`). Los datos del cliente (`name`) quedan almacenados con la key: ver `GET /admin/api-keys`.
+
+### Uso desde la app móvil (BL-030)
+
+(Legacy) Configurar `EXPO_PUBLIC_API_KEY` en `.env`, `.env.dev` o en `eas.json`. La app envía el header automáticamente en `geocoding.ts` y `planner.ts`.
+
+Desde BL-037 cada app registra su propia key al instalar (ver above); `EXPO_PUBLIC_API_KEY` ya no se usa por defecto.
+
+### Rotar desde el cliente
+
+La app puede rotar su key desde el cliente: llama a `POST /admin/api-keys/{id}/rotate` (BL-036), guarda la nueva key en SQLite local y deja de enviar la vieja.
 
 ### Endpoints protegidos
 
@@ -88,6 +98,8 @@ Configurar `EXPO_PUBLIC_API_KEY` en `.env`, `.env.dev` o en `eas.json`. La app e
 | `/v1/trips/plan` | POST | `X-API-Key` |
 | `/admin/api-keys` | POST, GET | `X-Admin-Key` |
 | `/admin/api-keys/{id}` | DELETE | `X-Admin-Key` |
+| `/register/client-key` | POST | `X-Admin-Key` |
+| `/admin/api-keys/{id}/rotate` | POST | `X-Admin-Key` |
 | `/admin/api-keys/{id}/rotate` | POST | `X-Admin-Key` |
 
 ### Rotación de keys

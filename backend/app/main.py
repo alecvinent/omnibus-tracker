@@ -160,3 +160,36 @@ def admin_rotate_api_key(
         "created_at": new_row["created_at"],
         "rotated_from": {"id": key_id},
     }
+
+
+# ---------------------------------------------------------------------------
+# Client-side registration (BL-037)
+# ---------------------------------------------------------------------------
+
+
+class RegisterClientKeyRequest(BaseModel):
+    name: str | None = Field(None, max_length=120)
+    deviceId: str | None = Field(None, max_length=200)
+
+
+class RegisterClientKeyResponse(BaseModel):
+    id: str
+    name: str
+    key: str
+    created_at: str
+
+
+@app.post("/register/client-key", response_model=RegisterClientKeyResponse)
+def register_client_key(
+    body: RegisterClientKeyRequest,
+    _admin: None = Depends(verify_admin_key),
+):
+    """Genera una key de cliente con datos del cliente; devuelve el valor una sola vez."""
+    name = (body.name or "").strip() or (body.deviceId or "").strip() or "Omnibus Tracker"
+    key_id, plain_key = create_api_key(name)
+    return {
+        "id": key_id,
+        "name": name,
+        "key": plain_key,
+        "created_at": "just now",
+    }
