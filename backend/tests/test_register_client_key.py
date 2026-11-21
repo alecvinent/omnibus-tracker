@@ -7,14 +7,14 @@ import unittest
 from unittest.mock import patch
 
 BACKEND_DIR = __import__("pathlib").Path(__file__).resolve().parents[1]
-import sys  # noqa: E402
+import sys
 
 sys.path.insert(0, str(BACKEND_DIR))
 os.environ.setdefault("ADMIN_API_KEY", "test-admin-key")
 
-from tests.test_api_key_rotation import ApiKeyRotationTestCase  # noqa: E402
-from app import db as db_module  # noqa: E402
-from app import auth as auth_module  # noqa: E402
+from app import auth as auth_module
+from app import db as db_module
+from tests.test_api_key_rotation import ApiKeyRotationTestCase
 
 
 class RegisterClientKeyTests(ApiKeyRotationTestCase):

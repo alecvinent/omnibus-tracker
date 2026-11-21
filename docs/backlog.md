@@ -71,7 +71,7 @@ ello, la prioridad es implementar la integración real de transporte:
   - [ ] Tests unitarios del cliente (mock de HTTP) pasan
   - [ ] `ruff check .` y `ruff check --select F` limpios (cuando se adopten)
 - **Depends on:** BL-001
-- **Status:** todo
+- **Status:** in-progress
 
 ### BL-003 · Descarga y validación periódica del GTFS · P0
 - **What:** Validar el feed estático GTFS de Montevideo (`/buses/gtfs/static/latest/google_transit.zip`) antes de habilitar el planificador: fechas, `agency.txt`, `routes.txt`, `trips.txt`, `stops.txt`, `stop_times.txt`, `shapes.txt`, calendario y excepciones.

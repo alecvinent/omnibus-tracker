@@ -12,6 +12,27 @@ Fuente principal: https://api.montevideo.gub.uy/apidocs/publictransport
 
 Nunca commits credenciales reales: `backend/.env.example` contiene solo placeholders. Ver `docs/data-sources.md` para endpoints, términos y contacto.
 
+### Cliente IMM (BL-002)
+
+`app/imm_client.py` expone `ImmClient` y el factory `get_client()`. Es `async`, cachea el token OAuth2 (renovación 30 s antes del vencimiento), aplica una ventana deslizante de 10 llamadas/minuto y reintenta 429/5xx con backoff. En un 401 invalida el token y reintenta una vez. Ninguna excepción ni log incluye credenciales.
+
+```python
+from app.imm_client import get_client
+
+client = get_client()  # lee IMM_* del entorno
+try:
+    version = await client.get_gtfs_version()
+    buses = await client.get_buses()
+finally:
+    await client.aclose()
+```
+
+También están disponibles `get_bus_stops()`, `get_bus_stop_lines(id)`, `get_upcoming_buses(id, lines)`, `get_line_variants()`, `get_line_variant(id)` y `download_gtfs()`. Los tests unitarios usan `httpx.MockTransport` y no contactan la API real:
+
+```bash
+python -m unittest tests.test_imm_client -v
+```
+
 ## Variables de entorno
 
 - `IMM_CLIENT_ID` / `IMM_CLIENT_SECRET`: credenciales OAuth2 de la app registrada en el portal de la IMM. Solo en el backend; nunca en `EXPO_PUBLIC_*`.

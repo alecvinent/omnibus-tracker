@@ -17,8 +17,9 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from app import db as db_module
 from app.db import create_api_key_with_id, is_valid_api_key
+
+from app import db as db_module
 
 
 def main(argv: list[str] | None = None) -> int:
