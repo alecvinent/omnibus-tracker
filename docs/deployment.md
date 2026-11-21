@@ -70,6 +70,34 @@ Perfil actual:
 
 > Antes de publicar en producción, cambiar `production.env.EXPO_PUBLIC_API_URL` a la URL definitiva del backend.
 
+---
+
+## Mapas y tiles
+
+### Proveedores evaluados
+
+| Proveedor | Tipo | Costo | API key | Calidad | Recomendación |
+|-----------|------|-------|---------|---------|---------------|
+| **CARTO Voyager** | Vector (MapLibre GL) | Gratis con límites | No | Buena: calles y etiquetas claras, colores suaves para navegación urbana | **Opción principal** |
+| **OpenFreeMap Liberty** | Vector (MapLibre GL) | Gratis (OpenStreetMap) | No | Buena: estilo libre, cobertura global | Alternativa viable |
+| **demotiles.maplibre.org** | Vector | Gratis | No | Muy baja: pocos detalles, solo para desarrollo/demo | **No usar en producción** |
+| **MapTiler Cloud** | Vector/Raster | Gratis hasta 100k peticiones/mes | Sí | Muy buena: múltiples estilos, cobertura global | Si se necesita SLA/producción |
+
+### Decisión
+
+Se elige **CARTO Voyager** como proveedor por defecto porque:
+
+- No requiere API key, lo que simplifica builds y CI.
+- Ofrece calidad suficiente para navegación urbana en Montevideo y otras ciudades.
+- El estilo MapLibre GL es compatible directo con `@maplibre/maplibre-react-native`.
+
+La URL configurada es:
+```text
+https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json
+```
+
+Para cambiar a OpenFreeMap u otro proveedor, solo hay que modificar `EXPO_PUBLIC_MAP_STYLE_URL` en `.env.dev`, `.env` o `eas.json`.
+
 ### Pasos de alto nivel con EAS
 
 1. Instalar EAS CLI: `npm install -g eas-cli`.

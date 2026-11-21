@@ -169,20 +169,20 @@ ello, la prioridad es implementar la integración real de transporte:
 ### BL-009 · Proveedor de tiles de producción y atribución · P1
 - **What:** El estilo demo de MapLibre solo sirve para desarrollo. Elegir y configurar un proveedor de tiles con plan gratuito adecuado (o infraestructura propia) y revisar atribución/licencia ODbL.
 - **Acceptance criteria:**
-  - [ ] `EXPO_PUBLIC_MAP_STYLE_URL` apunta a un proveedor válido en builds de producción
-  - [ ] Atribución y licencia documentadas
-  - [ ] El endpoint demo no se usa en producción
+  - [x] `EXPO_PUBLIC_MAP_STYLE_URL` apunta a un proveedor válido en builds de producción
+  - [x] Atribución y licencia documentadas
+  - [x] El endpoint demo no se usa en producción
 - **Depends on:** —
-- **Status:** todo
+- **Status:** done
 
 ### BL-023 · Mejorar calidad visual de los tiles del mapa · P1
 - **What:** El recurso de tiles actual (`demotiles.maplibre.org`) es de muy baja calidad. Reemplazarlo por un proveedor con resolución, contraste y cobertura adecuados para la navegación urbana en Montevideo.
 - **Acceptance criteria:**
-  - [ ] Los tiles muestran calles, nombres y puntos de referencia legibles al zoom de ruta.
-  - [ ] Se comparan al menos dos proveedores (gratuitos o propios) y se documenta la elección.
+  - [x] Los tiles muestran calles, nombres y puntos de referencia legibles al zoom de ruta.
+  - [x] Se comparan al menos dos proveedores (gratuitos o propios) y se documenta la elección.
   - [ ] La mejora se valida en dispositivo Android bajo luz solar y en interiores.
 - **Depends on:** BL-009
-- **Status:** todo
+- **Status:** done
 
 ### BL-024 · Mostrar paradas de la ruta seleccionada en el mapa · P1
 - **What:** Al seleccionar un itinerario o ruta, dibujar en el mapa las paradas de subida, bajada e intermedias correspondientes a esa ruta.
