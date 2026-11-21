@@ -257,7 +257,7 @@ ello, la prioridad es implementar la integración real de transporte:
   - [x] El selector y la fila de preferencias muestran ciudad y país.
   - [x] `npm run typecheck` y `npm run lint` pasan sin errores.
 - **Depends on:** BL-022
-- **Status:** in-progress
+- **Status:** done
 
 ### BL-034 · Actualizar guía de desarrollo Android a tiles y API key de producción · P2
 - **What:** `docs/desarrollo-android-local.md` aún recomienda tiles demo (`demotiles.maplibre.org`) y no menciona `EXPO_PUBLIC_API_KEY`. Actualizar la guía para reflejar la configuración actual de desarrollo.
