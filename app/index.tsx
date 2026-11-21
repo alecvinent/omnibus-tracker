@@ -16,6 +16,7 @@ import { geocodeFirst, type GeocodingResult } from "@/services/geocoding";
 import type { MapPlace } from "@/utils/mapGeometry";
 import { getCityCenter } from "@/utils/mapGeometry";
 import { getPreferences, saveTripHistoryItem } from "@/db/repositories";
+import { ensureClientKey } from "@/services/api-key";
 import type { UserPreferences } from "@/domain/models";
 
 type ActiveField = "origin" | "destination" | null;
@@ -37,6 +38,8 @@ export default function HomeScreen() {
     getPreferences()
       .then((p: UserPreferences) => setCityId(p.cityId))
       .catch(console.warn);
+    // Cada instalación registra una key propia del cliente (BL-037).
+    ensureClientKey().catch((e) => console.warn("key de cliente no registrada:", e));
   }, []);
 
   const [originQuery, setOriginQuery] = useState("Mi ubicación");

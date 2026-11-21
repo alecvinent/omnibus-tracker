@@ -11,6 +11,13 @@ export async function initializeDatabase() {
   const db = await getDatabase();
   await db.execAsync(`
     PRAGMA journal_mode = WAL;
+    CREATE TABLE IF NOT EXISTS client_key (
+      id INTEGER PRIMARY KEY CHECK (id = 1),
+      key TEXT NOT NULL UNIQUE,
+      key_id TEXT NOT NULL,
+      name TEXT NOT NULL,
+      installed_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+    );
     CREATE TABLE IF NOT EXISTS places (
       id TEXT PRIMARY KEY NOT NULL,
       name TEXT NOT NULL,
@@ -42,9 +49,7 @@ export async function initializeDatabase() {
   `);
 
   // SQLite no soporta IF NOT EXISTS en ADD COLUMN; verificamos antes de migrar.
-  const columns = await db.getAllAsync<{ name: string }>(
-    "PRAGMA table_info(preferences);"
-  );
+  const columns = (await db.getAllAsync("PRAGMA table_info(preferences);")) as Array<{ name: string }>;
   if (!columns.some((column) => column.name === "city_id")) {
     await db.execAsync("ALTER TABLE preferences ADD COLUMN city_id TEXT;");
   }

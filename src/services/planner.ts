@@ -1,5 +1,5 @@
-import { API_KEY } from "@/config/env";
 import { Coordinate, PlannedItinerary, UserPreferences } from "@/domain/models";
+import { getClientApiKey } from "@/services/api-key";
 
 export type PlanTripRequest = {
   origin: Coordinate;
@@ -16,11 +16,12 @@ export type PlanTripRequest = {
 export async function planTrip(_request: PlanTripRequest): Promise<PlannedItinerary[]> {
   const apiUrl = process.env.EXPO_PUBLIC_API_URL;
   if (!apiUrl) throw new Error("El planificador todavía no está configurado.");
+  const apiKey = await getClientApiKey();
   const response = await fetch(`${apiUrl}/v1/trips/plan`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "X-API-Key": API_KEY,
+      "X-API-Key": apiKey ?? "",
     },
     body: JSON.stringify(_request),
   });
