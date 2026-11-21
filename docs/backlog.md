@@ -316,6 +316,21 @@ ello, la prioridad es implementar la integración real de transporte:
 - **Depends on:** —
 - **Status:** todo
 
+## Épica 9: Panel de administración
+
+### BL-031 · Frontend de administración para gestionar API keys, usuarios y analytics · P1
+- **What:** Crear un frontend web de administración para gestionar Ómnibus Tracker: API keys, usuarios/administradores, métricas/analytics de uso de la API y estado del sistema.
+- **Acceptance criteria:**
+  - [ ] Frontend accesible en una ruta/admin separada (p. ej. `/admin`) o proyecto independiente.
+  - [ ] Autenticación de administrador antes de acceder al panel.
+  - [ ] Pantalla para listar, crear, rotar y revocar API keys consumiendo los endpoints del backend.
+  - [ ] Pantalla básica de usuarios/administradores (listado, activar/desactivar).
+  - [ ] Dashboard de analytics con métricas de uso de la API (requests, errores, endpoints más usados) cuando el backend las exponga.
+  - [ ] No se exponen API keys ni credenciales en el cliente más allá de lo necesario para la sesión autenticada.
+  - [ ] Documentación de instalación y despliegue del panel en `docs/admin-dashboard.md`.
+- **Depends on:** BL-030
+- **Status:** todo
+
 ## Gobernanza
 
 ### BL-016 · Adoptar el workflow de backlog · P0
