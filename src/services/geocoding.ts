@@ -1,7 +1,7 @@
 /**
  * Geocodificación mediada por el backend (BL-006).
  */
-import { API_URL } from "@/config/env";
+import { API_KEY, API_URL } from "@/config/env";
 import { getCityById } from "@/config/cities";
 
 export type GeocodingResult = {
@@ -30,7 +30,11 @@ export async function searchPlaces(
   });
 
   const url = `${API_URL}/v1/geocode/search?${params}`;
-  const response = await fetch(url);
+  const response = await fetch(url, {
+    headers: {
+      "X-API-Key": API_KEY,
+    },
+  });
   if (!response.ok) {
     throw new Error("No se pudieron cargar sugerencias de lugares.");
   }

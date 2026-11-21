@@ -6,7 +6,8 @@
       "distribution": "internal",
       "env": {
         "EXPO_PUBLIC_API_URL": "https://omnibus-tracker.fastapicloud.dev/",
-        "EXPO_PUBLIC_MAP_STYLE_URL": "https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json"
+        "EXPO_PUBLIC_MAP_STYLE_URL": "https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json",
+        "EXPO_PUBLIC_API_KEY": "cambia_por_tu_api_key"
       }
     },
     "preview": {
@@ -14,7 +15,8 @@
       "android": { "buildType": "apk" },
       "env": {
         "EXPO_PUBLIC_API_URL": "https://omnibus-tracker.fastapicloud.dev/",
-        "EXPO_PUBLIC_MAP_STYLE_URL": "https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json"
+        "EXPO_PUBLIC_MAP_STYLE_URL": "https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json",
+        "EXPO_PUBLIC_API_KEY": "cambia_por_tu_api_key"
       }
     },
     "production": {
@@ -22,7 +24,8 @@
       "android": { "buildType": "app-bundle" },
       "env": {
         "EXPO_PUBLIC_API_URL": "https://omnibus-tracker.fastapicloud.dev/",
-        "EXPO_PUBLIC_MAP_STYLE_URL": "https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json"
+        "EXPO_PUBLIC_MAP_STYLE_URL": "https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json",
+        "EXPO_PUBLIC_API_KEY": "cambia_por_tu_api_key"
       }
     }
   }

@@ -1,8 +1,10 @@
 import httpx
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import Depends, FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
+from app.auth import verify_admin_key, verify_api_key
+from app.db import create_api_key, init_db, list_api_keys, revoke_api_key
 from app.geocode import search_places
 
 app = FastAPI(title="Ómnibus Tracker API", version="0.1.0")
@@ -13,6 +15,11 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+@app.on_event("startup")
+def startup_event() -> None:
+    init_db()
 
 
 class Coordinate(BaseModel):
@@ -50,6 +57,7 @@ async def geocode_search(
     q: str = Query(..., min_length=2, max_length=120),
     limit: int = Query(6, ge=1, le=10),
     cityId: str | None = Query(None, alias="cityId"),
+    _api_key: str = Depends(verify_api_key),
 ):
     try:
         rows = await search_places(q, limit=limit, city_id=cityId)
@@ -59,10 +67,62 @@ async def geocode_search(
 
 
 @app.post("/v1/trips/plan")
-async def plan_trip(request: PlanTripRequest):
+async def plan_trip(
+    request: PlanTripRequest,
+    _api_key: str = Depends(verify_api_key),
+):
     # Próxima fase: consultar OpenTripPlanner con el feed GTFS validado.
     # Se responde 503 hasta que exista una fuente de itinerarios configurada.
     raise HTTPException(
         status_code=503,
-        detail="El motor de rutas aún no está conectado al GTFS de Montevideo.",
+        detail="El motor de rutas aún no está conectado al GTFS.",
     )
+
+
+# ---------------------------------------------------------------------------
+# Admin endpoints for API key management
+# ---------------------------------------------------------------------------
+
+
+class CreateApiKeyRequest(BaseModel):
+    name: str = Field(..., min_length=1, max_length=120)
+
+
+class CreateApiKeyResponse(BaseModel):
+    id: str
+    name: str
+    key: str
+    created_at: str
+
+
+@app.post("/admin/api-keys", response_model=CreateApiKeyResponse)
+def admin_create_api_key(
+    body: CreateApiKeyRequest,
+    _admin: None = Depends(verify_admin_key),
+):
+    key_id, plain_key = create_api_key(body.name)
+    return {
+        "id": key_id,
+        "name": body.name,
+        "key": plain_key,
+        "created_at": "just now",
+    }
+
+
+@app.get("/admin/api-keys")
+def admin_list_api_keys(
+    active_only: bool = True,
+    _admin: None = Depends(verify_admin_key),
+):
+    return list_api_keys(active_only=active_only)
+
+
+@app.delete("/admin/api-keys/{key_id}")
+def admin_revoke_api_key(
+    key_id: str,
+    _admin: None = Depends(verify_admin_key),
+):
+    revoked = revoke_api_key(key_id)
+    if not revoked:
+        raise HTTPException(status_code=404, detail="API key no encontrada o ya revocada.")
+    return {"id": key_id, "status": "revoked"}
