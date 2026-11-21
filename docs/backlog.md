@@ -271,13 +271,13 @@ ello, la prioridad es implementar la integración real de transporte:
 ### BL-035 · Backend falla al iniciar en FastAPI Cloud por ruta de SQLite no escribible · P0
 - **What:** `backend/app/db.py` usa `/data/api_keys.db` como default. El contenedor de FastAPI Cloud no tiene permisos para crear `/data`, por lo que `init_db()` lanza `PermissionError` y el servicio no arranca.
 - **Acceptance criteria:**
-  - [ ] `backend/app/db.py` usa una ruta por defecto dentro del proyecto (`/app/data/api_keys.db` o relativa a `backend/`).
-  - [ ] Se puede sobreescribir vía `API_KEYS_DB_PATH` sin cambios de código.
-  - [ ] El directorio de datos está ignorado por git.
-  - [ ] `backend/README.md` refleja el nuevo default.
-  - [ ] `npm run typecheck` y `npm run lint` del frontend pasan (gates del repo).
+  - [x] `backend/app/db.py` usa una ruta por defecto dentro del proyecto (`/app/data/api_keys.db` o relativa a `backend/`).
+  - [x] Se puede sobreescribir vía `API_KEYS_DB_PATH` sin cambios de código.
+  - [x] El directorio de datos está ignorado por git.
+  - [x] `backend/README.md` refleja el nuevo default.
+  - [x] `npm run typecheck` y `npm run lint` del frontend pasan (gates del repo).
 - **Depends on:** BL-030
-- **Status:** in-progress
+- **Status:** done
 
 ### BL-027 · Evaluar opciones de hosting/distribución de la app móvil · P1
 - **What:** Documentar alternativas para distribuir la app Android/iOS y recomendar la mejor opción según el stack (Expo/React Native) y presupuesto. El backend usará FastAPI Cloud (https://fastapicloud.com).

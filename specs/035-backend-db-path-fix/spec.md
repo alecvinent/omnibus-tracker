@@ -1,6 +1,6 @@
 # BL-035 · Backend falla al iniciar en FastAPI Cloud por ruta de SQLite no escribible
 
-**Status**: In Progress
+**Status**: Done
 
 ## Problemática
 
