@@ -41,6 +41,7 @@ export default function ResultsScreen() {
   }, [destination, destLat, destLon]);
 
   const [itineraries, setItineraries] = useState<PlannedItinerary[]>([]);
+  const [selectedItinerary, setSelectedItinerary] = useState<PlannedItinerary | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -57,6 +58,7 @@ export default function ResultsScreen() {
     setLoading(true);
     setError(null);
     setItineraries([]);
+    setSelectedItinerary(null);
 
     async function load() {
       try {
@@ -66,7 +68,10 @@ export default function ResultsScreen() {
           destination: destinationCoord,
           preferences,
         });
-        if (!cancelled) setItineraries(data);
+        if (!cancelled) {
+          setItineraries(data);
+          if (data.length > 0) setSelectedItinerary(data[0]);
+        }
       } catch (err) {
         if (!cancelled) setError(err instanceof Error ? err.message : "No se pudieron cargar los itinerarios.");
       } finally {
@@ -93,7 +98,7 @@ export default function ResultsScreen() {
         <Text style={styles.routeValue}>{destination || "Destino"}</Text>
       </View>
       <View style={styles.map}>
-        <MapView origin={originPlace} destination={destinationPlace} />
+        <MapView origin={originPlace} destination={destinationPlace} itinerary={selectedItinerary} />
       </View>
       <ScrollView contentContainerStyle={styles.content}>
         <Text style={styles.title}>Opciones de viaje</Text>
@@ -113,7 +118,12 @@ export default function ResultsScreen() {
           </View>
         )}
         {!loading && !error && itineraries.map((it) => (
-          <ItineraryCard key={it.id} itinerary={it} />
+          <ItineraryCard
+            key={it.id}
+            itinerary={it}
+            selected={selectedItinerary?.id === it.id}
+            onSelect={() => setSelectedItinerary(it)}
+          />
         ))}
       </ScrollView>
     </SafeAreaView>
